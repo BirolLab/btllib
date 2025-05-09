@@ -56460,6 +56460,36 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_MIBloomFilter8_set_k(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  btllib::MIBloomFilter< uint8_t > *arg1 = (btllib::MIBloomFilter< uint8_t > *) 0 ;
+  unsigned int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  PyObject *swig_obj[2] ;
+  
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_btllib__MIBloomFilterT_uint8_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "MIBloomFilter8_set_k" "', argument " "1"" of type '" "btllib::MIBloomFilter< uint8_t > *""'"); 
+  }
+  arg1 = reinterpret_cast< btllib::MIBloomFilter< uint8_t > * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(swig_obj[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "MIBloomFilter8_set_k" "', argument " "2"" of type '" "unsigned int""'");
+  } 
+  arg2 = static_cast< unsigned int >(val2);
+  (arg1)->set_k(arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_MIBloomFilter8_calc_optimal_size(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   size_t arg1 ;
@@ -57554,6 +57584,36 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_MIBloomFilter16_set_k(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  btllib::MIBloomFilter< uint16_t > *arg1 = (btllib::MIBloomFilter< uint16_t > *) 0 ;
+  unsigned int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  PyObject *swig_obj[2] ;
+  
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_btllib__MIBloomFilterT_uint16_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "MIBloomFilter16_set_k" "', argument " "1"" of type '" "btllib::MIBloomFilter< uint16_t > *""'"); 
+  }
+  arg1 = reinterpret_cast< btllib::MIBloomFilter< uint16_t > * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(swig_obj[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "MIBloomFilter16_set_k" "', argument " "2"" of type '" "unsigned int""'");
+  } 
+  arg2 = static_cast< unsigned int >(val2);
+  (arg1)->set_k(arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_MIBloomFilter16_calc_optimal_size(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   size_t arg1 ;
@@ -58642,6 +58702,36 @@ SWIGINTERN PyObject *_wrap_MIBloomFilter32_get_id_occurence_count(PyObject *self
       PyList_SetItem(resultobj, i, item);
     }
   }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_MIBloomFilter32_set_k(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  btllib::MIBloomFilter< uint32_t > *arg1 = (btllib::MIBloomFilter< uint32_t > *) 0 ;
+  unsigned int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  PyObject *swig_obj[2] ;
+  
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_btllib__MIBloomFilterT_uint32_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "MIBloomFilter32_set_k" "', argument " "1"" of type '" "btllib::MIBloomFilter< uint32_t > *""'"); 
+  }
+  arg1 = reinterpret_cast< btllib::MIBloomFilter< uint32_t > * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(swig_obj[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "MIBloomFilter32_set_k" "', argument " "2"" of type '" "unsigned int""'");
+  } 
+  arg2 = static_cast< unsigned int >(val2);
+  (arg1)->set_k(arg2);
+  resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
   return NULL;
@@ -69855,6 +69945,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__btllib__MIBloomFilterT_uint8_t_t_methods[]
   { "get_k", _wrap_MIBloomFilter8_get_k, METH_NOARGS, "" },
   { "get_hash_fn", _wrap_MIBloomFilter8_get_hash_fn, METH_NOARGS, "" },
   { "get_id_occurence_count", _wrap_MIBloomFilter8_get_id_occurence_count, METH_O, "" },
+  { "set_k", _wrap_MIBloomFilter8_set_k, METH_O, "" },
   { "calc_optimal_size", (PyCFunction)(void(*)(void))_wrap_MIBloomFilter8_calc_optimal_size, METH_STATIC|METH_VARARGS, "" },
   { NULL, NULL, 0, NULL } /* Sentinel */
 };
@@ -70104,6 +70195,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__btllib__MIBloomFilterT_uint16_t_t_methods[
   { "get_k", _wrap_MIBloomFilter16_get_k, METH_NOARGS, "" },
   { "get_hash_fn", _wrap_MIBloomFilter16_get_hash_fn, METH_NOARGS, "" },
   { "get_id_occurence_count", _wrap_MIBloomFilter16_get_id_occurence_count, METH_O, "" },
+  { "set_k", _wrap_MIBloomFilter16_set_k, METH_O, "" },
   { "calc_optimal_size", (PyCFunction)(void(*)(void))_wrap_MIBloomFilter16_calc_optimal_size, METH_STATIC|METH_VARARGS, "" },
   { NULL, NULL, 0, NULL } /* Sentinel */
 };
@@ -70353,6 +70445,7 @@ SWIGINTERN PyMethodDef SwigPyBuiltin__btllib__MIBloomFilterT_uint32_t_t_methods[
   { "get_k", _wrap_MIBloomFilter32_get_k, METH_NOARGS, "" },
   { "get_hash_fn", _wrap_MIBloomFilter32_get_hash_fn, METH_NOARGS, "" },
   { "get_id_occurence_count", _wrap_MIBloomFilter32_get_id_occurence_count, METH_O, "" },
+  { "set_k", _wrap_MIBloomFilter32_set_k, METH_O, "" },
   { "calc_optimal_size", (PyCFunction)(void(*)(void))_wrap_MIBloomFilter32_calc_optimal_size, METH_STATIC|METH_VARARGS, "" },
   { NULL, NULL, 0, NULL } /* Sentinel */
 };
