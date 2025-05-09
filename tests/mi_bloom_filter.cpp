@@ -22,6 +22,11 @@ main()
   TEST_ASSERT(mi_bf_1.bv_contains({ 100, 200, 300 }));
   TEST_ASSERT(!mi_bf_1.bv_contains({ 1, 20, 100 }));
 
+  unsigned kmer_size = 10;
+  mi_bf_1.set_k(kmer_size);
+  unsigned set_kmer_size = mi_bf_1.get_k();
+  TEST_ASSERT(set_kmer_size = kmer_size);
+
   uint8_t ID_1 = 12;
   mi_bf_1.insert_id({ 1, 10, 100 }, ID_1);
   
