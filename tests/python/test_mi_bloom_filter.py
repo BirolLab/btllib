@@ -25,6 +25,7 @@ class MIBloomFilterTests(unittest.TestCase):
     def set_up_mi_bf_1(self):
         
         self.mi_bf_1 = btllib.MIBloomFilter8(1024 * 1024, 3, "ntHash")
+        self.mi_bf_1.set_k(10)
         
         for h in self.test_hashes_1:
             self.mi_bf_1.insert_bv(h)
@@ -88,6 +89,10 @@ class MIBloomFilterTests(unittest.TestCase):
         include_saturated = True
         self.assertEqual(len(self.test_hashes_1[0]), 
                          self.mi_bf_1.get_id_occurence_count(include_saturated)[expected_id])
+
+    def test_mibloomfilter_id_occurence(self):
+        self.set_up_mi_bf_1()
+        self.assertEqual(10, self.mi_bf_1.get_k())
 
     def test_mibloomfilter_random_sampling(self):
         

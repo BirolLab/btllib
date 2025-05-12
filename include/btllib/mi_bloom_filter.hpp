@@ -241,6 +241,9 @@ public:
   /** Returns the occurence count for each ID in the miBF */
   std::vector<size_t> get_id_occurence_count(const bool& include_saturated);
 
+  /** set k-mer size*/
+  void set_k(unsigned k) { kmer_size = k; }
+
   /** Returns an a filter size large enough to maintain an occupancy specified
    */
   static size_t calc_optimal_size(size_t entries,
