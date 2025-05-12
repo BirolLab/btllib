@@ -25,7 +25,7 @@ class MIBloomFilterTests(unittest.TestCase):
     def set_up_mi_bf_1(self):
         
         self.mi_bf_1 = btllib.MIBloomFilter8(1024 * 1024, 3, "ntHash")
-        self.mi_bf_1.set_k() = 10
+        self.mi_bf_1.set_k(10)
         
         for h in self.test_hashes_1:
             self.mi_bf_1.insert_bv(h)
