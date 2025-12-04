@@ -187,7 +187,7 @@ get_reverse_complement(const std::string& seq)
 
 void
 bs_conversion(std::string& seq, std::string& type){
-  std::transform(seq.begin(), seq.end(), seq.begin(), [](char c) {
+  std::transform(seq.begin(), seq.end(), seq.begin(), [&type](char c) {
     if (type == "CT" || type == "ct") {
         return CT_CONVERSION[(unsigned char)(c)];
     } else {
