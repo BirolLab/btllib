@@ -13,6 +13,8 @@ namespace btllib {
 extern const char COMPLEMENTS[256];
 extern const char AMINO_ACIDS[256];
 extern const char CAPITALS[256];
+extern const char CT_CONVERSION[256];
+extern const char GA_CONVERSION[256];
 
 /**
  * Reverse complement a sequence in-place.
@@ -33,6 +35,24 @@ reverse_complement(std::string& seq);
 std::string
 get_reverse_complement(const std::string& seq);
 
-} // namespace btllib
+} 
+
+void
+bs_conversion(std::string& seq, std::string& type);
+
+/**
+ * Obtain a reverse complement of the provided sequence. The argument sequence
+ * is left untouched.
+ *
+ * @param seq Sequence to reverse complement.
+ *
+ * @return Reverse complemented sequence.
+ */
+std::string
+get_bs_conversion(const std::string& seq, std::string& type);
+
+}
+
+// namespace btllib
 
 #endif
