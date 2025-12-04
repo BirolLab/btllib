@@ -35,7 +35,7 @@ reverse_complement(std::string& seq);
 std::string
 get_reverse_complement(const std::string& seq);
 
-} 
+
 
 void
 bs_conversion(std::string& seq, std::string& type);
