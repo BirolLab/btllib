@@ -187,7 +187,7 @@ get_reverse_complement(const std::string& seq)
 
 void
 bs_conversion(std::string& seq, std::string& type){
-    const unsigned char* table =
+    const char* table =
         (type == "CT" || type == "ct") ? CT_CONVERSION : GA_CONVERSION;
 
     std::transform(seq.begin(), seq.end(), seq.begin(),
@@ -196,7 +196,7 @@ bs_conversion(std::string& seq, std::string& type){
 std::string
 get_bs_conversion(const std::string& seq, std::string& type){
   std::string conversion(seq);
-  bs_conversion(conversion);
+  bs_conversion(conversion, type);
   return conversion;
 }
 
