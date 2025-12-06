@@ -187,13 +187,11 @@ get_reverse_complement(const std::string& seq)
 
 void
 bs_conversion(std::string& seq, std::string& type){
-  std::transform(seq.begin(), seq.end(), seq.begin(), [&type](char c) {
-    if (type == "CT" || type == "ct") {
-        return CT_CONVERSION[(unsigned char)(c)];
-    } else {
-        return GA_CONVERSION[(unsigned char)(c)];
-    }
-  });
+    const unsigned char* table =
+        (type == "CT" || type == "ct") ? CT_CONVERSION : GA_CONVERSION;
+
+    std::transform(seq.begin(), seq.end(), seq.begin(),
+        [table](char c) { return table[(unsigned char)c]; });
 }
 std::string
 get_bs_conversion(const std::string& seq, std::string& type){
