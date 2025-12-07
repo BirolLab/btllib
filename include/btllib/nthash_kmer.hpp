@@ -64,6 +64,7 @@ base_forward_hash(const char* seq, unsigned k, const uint64_t* primitive_tab = S
   if (remainder > 0) {
     h_val = srol(h_val, remainder);
   }
+  // TODO double check bug use k = 7 to test
   if (remainder == 3) {
     uint8_t trimer_loc = 0;
     trimer_loc += 16 * convert_tab[(unsigned char)seq[k - 3]]; // NOLINT

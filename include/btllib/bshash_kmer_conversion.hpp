@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 
+#include <btllib/bshash_hashing_internals.hpp>
 #include <btllib/hashing_internals.hpp>
 #include <btllib/nthash_kmer.hpp>
 #include <btllib/status.hpp>
@@ -43,9 +44,12 @@ using hashing_internals::BS_CT_RC_CONVERT_TAB;
 using hashing_internals::BS_GA_RC_CONVERT_TAB;
 
 // Optional: if you want the dimer/trimer/tetramer tables too
-using hashing_internals::DIMER_TAB;
-using hashing_internals::TRIMER_TAB;
-using hashing_internals::TETRAMER_TAB;
+using hashing_internals::BS_CT_DIMER_TAB;
+using hashing_internals::BS_CT_TRIMER_TAB;
+using hashing_internals::BS_CT_TETRAMER_TAB;
+using hashing_internals::BS_GA_DIMER_TAB;
+using hashing_internals::BS_GA_TRIMER_TAB;
+using hashing_internals::BS_GA_TETRAMER_TAB;
 
 /**
  * Normal k-mer hashing.
@@ -91,25 +95,49 @@ public:
       // Seed table
       primitive_tab = BS_CT_SEED_TAB;
 
+
       // Rolling hash right/left tables
       right_table = BS_CT_MS_TAB_33R;
       left_table  = BS_CT_MS_TAB_31L;
 
+
       // Convert tables
       convert_tab     = BS_CT_CONVERT_TAB;
       rc_convert_tab  = BS_CT_RC_CONVERT_TAB;
+ dimer_tab = BS_CT_DIMER_TAB;
+ rc_dimer_tab = BS_GA_DIMER_TAB;
+trimer_tab = BS_CT_TRIMER_TAB;
+rc_trimer_tab =  BS_GA_TRIMER_TAB;
+ tetramer_tab = BS_CT_TETRAMER_TAB;;
+rc_tetramer_tab= BS_GA_TETRAMER_TAB;
+
+      
 
       // dimer_tab, trimer_tab, tetramer_tab stay unchanged
 
   }
   else if (conversion_type == "GA" || conversion_type == "ga") {
-      primitive_tab = BS_GA_SEED_TAB;
+    primitive_tab    = BS_GA_SEED_TAB;
 
-      right_table = BS_GA_MS_TAB_33R;
-      left_table  = BS_GA_MS_TAB_31L;
 
-      convert_tab     = BS_GA_CONVERT_TAB;
-      rc_convert_tab  = BS_GA_RC_CONVERT_TAB;
+    // Rolling hash right/left tables
+    right_table      = BS_GA_MS_TAB_33R;
+    left_table       = BS_GA_MS_TAB_31L;
+
+
+    // Convert tables
+    convert_tab      = BS_GA_CONVERT_TAB;
+    rc_convert_tab   = BS_GA_RC_CONVERT_TAB;
+
+    // K-mer tables (forward GA, reverse CT)
+    dimer_tab        = BS_GA_DIMER_TAB;
+    rc_dimer_tab     = BS_CT_DIMER_TAB;
+
+    trimer_tab       = BS_GA_TRIMER_TAB;
+    rc_trimer_tab    = BS_CT_TRIMER_TAB;
+
+    tetramer_tab     = BS_GA_TETRAMER_TAB;
+    rc_tetramer_tab  = BS_CT_TETRAMER_TAB;
 
   }
   else {
@@ -345,15 +373,20 @@ private:
   std::unique_ptr<uint64_t[]> hash_arr;
 
 const uint64_t* primitive_tab;
-const uint64_t* dimer_tab = DIMER_TAB;
-const uint64_t* trimer_tab = TRIMER_TAB;
-const uint64_t* tetramer_tab = TETRAMER_TAB;
+
+const uint64_t* dimer_tab;
+const uint64_t* rc_dimer_tab;
+const uint64_t* trimer_tab;
+const uint64_t* rc_trimer_tab;
+const uint64_t* tetramer_tab;
+const uint64_t* rc_tetramer_tab;
 
 const uint8_t*  convert_tab;
 const uint8_t*  rc_convert_tab;   // NEW
 
 const uint64_t* const* right_table;
 const uint64_t* const* left_table;
+
   /**
    * Initialize the internal state of the iterator
    * @return \p true if successful, \p false otherwise
@@ -375,7 +408,7 @@ const uint64_t* const* left_table;
     }
     std::cerr << "conversion bshasb" << std::endl;
     fwd_hash = base_forward_hash(seq + pos, k, primitive_tab, dimer_tab, trimer_tab, tetramer_tab, convert_tab);
-    rev_hash = base_reverse_hash(seq + pos, k, primitive_tab, dimer_tab, trimer_tab, tetramer_tab, rc_convert_tab);
+    rev_hash = base_reverse_hash(seq + pos, k, primitive_tab, rc_dimer_tab, rc_trimer_tab, rc_tetramer_tab, rc_convert_tab);
     extend_hashes(fwd_hash, rev_hash, k, num_hashes, hash_arr.get());
     initialized = true;
     return true;
