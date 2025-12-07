@@ -22,11 +22,11 @@ main()
         "AAACAGAT"
         "CACCCGCT"
         "GAGCGGGT"
-        "TACTGTGT";
+        "TACTGTGTAA";
 
     std::string seq = first32 + first32; // 64 bases total
     unsigned h = 3;
-    unsigned k = 32;
+    unsigned k = 34;
 
     btllib::BsHash nthash(seq, h, k, "CG");
     std::vector<uint64_t*> hashes;
@@ -140,11 +140,11 @@ PRINT_TEST_NAME("CG k-mer rolling (degeneracy shift +1)")
     // ───────────────────────────────
 
     std::string first32 =
-        "ATGCGTAGGTCGATGACGTTGAGCGTACGAGT";
+        "ATGCGTAGGTCGATGACGTTGAGCGTACGAGTAA";
 
     std::string seq = first32 + first32; // 64 bases total
     unsigned h = 3;
-    unsigned k = 32;
+    unsigned k = 34;
 
     btllib::BsHash nthash(seq, h, k, "CG");
     std::vector<uint64_t*> hashes;
@@ -210,11 +210,11 @@ PRINT_TEST_NAME("CG k-mer rolling (degeneracy shift +1)")
     // ───────────────────────────────
 
     std::string first32 =
-        "TACCGATACCTACGCCATACGTCATACCGTTA";
+        "TACCGATACCTACGCCATACGTCATACCGTTAAA";
 
     std::string seq = first32 + first32; // 64 bases total
     unsigned h = 3;
-    unsigned k = 32;
+    unsigned k = 34;
 
     btllib::BsHash nthash(seq, h, k, "CG");
     std::vector<uint64_t*> hashes;
@@ -665,8 +665,8 @@ for (unsigned i = 0;  i < h1.size(); i = i+2) {
   {
     PRINT_TEST_NAME("CG canonical hashing")
 
-    std::string seq_f = "ACGTACACTGGACTGAGTCT";
-    std::string seq_r = "AGACTCAGTCCAGTGTACGT";
+    std::string seq_f = "ACGTACACTGGACTGAGTCTAA";
+    std::string seq_r = "TTAGACTCAGTCCAGTGTACGT";
     unsigned h = 3;
 
     btllib::BsHash nthash_f(seq_f, h, seq_f.size(), "CG");
@@ -731,7 +731,7 @@ for (unsigned i = 0;  i < h1.size(); i = i+2) {
 
     std::string seq = "ACTGACTA";
     unsigned h = 3;
-    unsigned k = 4;
+    unsigned k = 6;
 
     btllib::BsHash nthash(seq, h, k, "CG");
     std::stack<uint64_t*> hashes;
@@ -847,7 +847,7 @@ for (unsigned i = 0;  i < h1.size(); i = i+2) {
   {
     PRINT_TEST_NAME("skipping Ns")
 
-    std::string seq = "ACGTACACTGGACTGAGTCT";
+    std::string seq = "ACGTACACTGGACTGAGTCTAAAA";
     std::string seq_with_ns = seq;
 
     TEST_ASSERT_GE(seq_with_ns.size(), 10)
@@ -882,11 +882,11 @@ for (unsigned i = 0;  i < h1.size(); i = i+2) {
     PRINT_TEST_NAME("check methylation")
 
     std::string seq_k6 = "ATCGGA";
-    std::string seq_k4 = "CGTA";
+    std::string seq_k4 = "GGCGTA";
     btllib::BsHash nthash1(seq_k6, 3, 6);
     nthash1.roll();
     TEST_ASSERT_EQ(nthash1.is_methylated(), true)
-    btllib::BsHash nthash2(seq_k4, 3, 4);
+    btllib::BsHash nthash2(seq_k4, 3, 6);
     nthash2.roll();
     TEST_ASSERT_EQ(nthash2.is_methylated(), true)
 

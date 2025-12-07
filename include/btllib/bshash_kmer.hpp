@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <algorithm>
 #include <cstdint>
 #include <cstring>
 #include <deque>
@@ -749,6 +750,7 @@ public:
   {
     check_error(k == 0, "BsHash: k must be greater than 0");
     check_error(k % 2 == 1, "BsHash: k must be even");
+    check_error((k/2) % 2 == 0, "BsHash: k must have odd number of dimers");
     check_error(this->seq_len < k,
                 "BsHash: sequence length (" + std::to_string(this->seq_len) +
                   ") is smaller than k (" + std::to_string(k) + ")");
@@ -764,18 +766,22 @@ public:
         DIMER_TAB = CC_DIMER_TAB;
         TAB_33R = MS_TAB_33R_CC;
         TAB_31L = MS_TAB_31L_CC;
+        meth_signal = {"CC", "GG"};
     } else if (mode == "CG") {
         DIMER_TAB = CG_DIMER_TAB;
         TAB_33R = MS_TAB_33R_CG;
         TAB_31L = MS_TAB_31L_CG;
+        meth_signal = {"CG"}; 
     } else if (mode == "CT") {
         DIMER_TAB = CT_DIMER_TAB;
         TAB_33R = MS_TAB_33R_CT;
         TAB_31L = MS_TAB_31L_CT;
+        meth_signal = {"CT", "AG"};
     } else if (mode == "CA") {
         DIMER_TAB = CA_DIMER_TAB;
         TAB_33R = MS_TAB_33R_CA;
         TAB_31L = MS_TAB_31L_CA;
+        meth_signal = {"CA", "TG"};
     }
   }
 
@@ -924,27 +930,48 @@ bool roll()
     return true;
 }
 
+std::string center_dimer() {
+    if (k < 2) return "";
 
-bool is_methylated() {
-    if (k < 2) return false; // cannot have a dimer
-
-    // Center dimer index within k-mer
     size_t center_idx;
     size_t num_dimers = k / 2;
 
     if (num_dimers % 2 == 1) {
-        // Odd number of dimers → pick exact center dimer
         center_idx = pos + (num_dimers / 2) * 2;
     } else {
-        // Even number of dimers → pick left of two central dimers
         center_idx = pos + ((num_dimers / 2) - 1) * 2;
     }
 
-    // Safety check
-    if (center_idx + 1 >= seq_len) return false;
+    if (center_idx + 1 >= seq_len) return "";
 
-    return seq[center_idx] == 'C' && seq[center_idx + 1] == 'G';
+    // Return actual dimer as a 2-char string
+    return std::string{seq[center_idx], seq[center_idx + 1]};
 }
+
+
+bool is_methylated() {
+
+
+    size_t num_dimers = k / 2;
+    size_t center_idx = pos + (num_dimers / 2) * 2;
+    // Build center dimer string
+    std::string dimer;
+    dimer += seq[center_idx];
+    dimer += seq[center_idx + 1];
+    std::transform(dimer.begin(), dimer.end(), dimer.begin(), ::toupper);
+
+    // Check membership in meth_signal
+    return std::find(meth_signal.begin(), meth_signal.end(), dimer) != meth_signal.end();
+}
+
+bool is_forward_higher(const std::vector<uint64_t>& fwd_hashes,
+                       const std::vector<uint64_t>& rev_hashes,
+                       bool even)
+{
+    size_t idx = even ? 0 : 1;
+    return fwd_hashes[idx] > rev_hashes[idx];
+}
+
 
   /**
    * Like the roll() function, but advance backwards.
@@ -1071,6 +1098,7 @@ private:
   bool initialized;
   std::vector<uint64_t> fwd_hashes = {0, 0};
   std::vector<uint64_t>  rev_hashes = {0, 0};
+  std::vector<std::string> meth_signal;
   bool even = true;
   std::unique_ptr<uint64_t[]> hash_arr;
   const uint64_t* DIMER_TAB = nullptr;

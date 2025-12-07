@@ -38,9 +38,9 @@ main()
   {
     PRINT_TEST_NAME("k-mer rolling")
 
-    std::string seq = "AGTCAGTC";
-    unsigned h = 1;
-    unsigned k = 4;
+    std::string seq = "AGTCAGTCA";
+    unsigned h = 3;
+    unsigned k = 5;
 
     btllib::BSHashConversion nthash(seq, h, k, "CT");
     std::vector<uint64_t*> hashes;
@@ -60,13 +60,13 @@ main()
   {
     PRINT_TEST_NAME("k-mer rolling vs. base hash values")
 
-    std::string seq = "ACGTACACTGGACTGAGTCT";
+    std::string seq = "ACGTACACTGGACTGAGTCTA";
 
     btllib::BSHashConversion nthash(seq, 3, seq.size() - 2, "CT");
-    /* 18-mers of kmer*/
-    std::string kmer1 = seq.substr(0, 18);
-    std::string kmer2 = seq.substr(1, 18);
-    std::string kmer3 = seq.substr(2, 18);
+    /* 19-mers of kmer*/
+    std::string kmer1 = seq.substr(0, 19);
+    std::string kmer2 = seq.substr(1, 19);
+    std::string kmer3 = seq.substr(2, 19);
 
     btllib::BSHashConversion nthash_vector[] = {
       btllib::BSHashConversion(kmer1, nthash.get_hash_num(), kmer1.size(), "CT"),
@@ -86,8 +86,8 @@ main()
   {
     PRINT_TEST_NAME("canonical hashing")
 
-    std::string seq_f = "ACGTACACTGGACTGAGTCT";
-    std::string seq_r = "AGACTCAGTCCAGTGTACGT";
+    std::string seq_f = "ACGTACACTGGACTGAGTCTA";
+    std::string seq_r = "TAGACTCAGTCCAGTGTACGT";
     unsigned h = 3;
 
     btllib::BSHashConversion nthash_f(seq_f, h, seq_f.size(), "CT");
@@ -128,7 +128,7 @@ main()
 
     std::string seq = "ACTGATCAG";
     unsigned h = 3;
-    unsigned k = 6;
+    unsigned k = 5;
 
     btllib::BSHashConversion nthash(seq, h, k, "CT");
     nthash.roll();
@@ -148,7 +148,7 @@ main()
   {
     PRINT_TEST_NAME("skipping Ns")
 
-    std::string seq = "ACGTACACTGGACTGAGTCT";
+    std::string seq = "ACGTACACTGGACTGAGTCTAA";
     std::string seq_with_ns = seq;
 
     TEST_ASSERT_GE(seq_with_ns.size(), 10)
@@ -177,8 +177,8 @@ main()
   {
     PRINT_TEST_NAME("base substitution")
 
-    std::string seq = "ACGTACACTGGACTGAGTCT";
-    std::string sub = "ACGCGCACTGGACTGAGTCT";
+    std::string seq = "ACGTACACTGGACTGAGTCTA";
+    std::string sub = "ACGCGCACTGGACTGAGTCTA";
 
     btllib::BSHashConversion nthash(seq, 3, seq.size(), "CT");
     btllib::BSHashConversion nthash_subbed(sub, 3, sub.size(), "CT");

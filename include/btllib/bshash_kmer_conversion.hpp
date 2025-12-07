@@ -78,12 +78,13 @@ public:
     , initialized(false)
     , hash_arr(new uint64_t[num_hashes])
   {
-    check_error(k == 0, "NtHash: k must be greater than 0");
+    check_error(k == 0, "BsHash: k must be greater than 0");
+    check_error(k%2 != 1, "BsHash: k must be odd");
     check_error(this->seq_len < k,
-                "NtHash: sequence length (" + std::to_string(this->seq_len) +
+                "BsHash: sequence length (" + std::to_string(this->seq_len) +
                   ") is smaller than k (" + std::to_string(k) + ")");
     check_error(pos > this->seq_len - k,
-                "NtHash: passed position (" + std::to_string(pos) +
+                "BsHash: passed position (" + std::to_string(pos) +
                   ") is larger than sequence length (" +
                   std::to_string(this->seq_len) + ")");
     if (conversion_type == "CT"|| conversion_type == "ct") {
@@ -112,13 +113,13 @@ public:
 
   }
   else {
-      check_error(k == 0, "Unsupported conversion_type. Must be CT or GA.");
+      check_error(true, "Unsupported conversion_type. Must be CT or GA.");
       exit(1);
   }
   }
 
   /**
-   * Construct an ntHash object for k-mers.
+   * Construct an BsHash object for k-mers.
    * @param seq Sequence string
    * @param num_hashes Number of hashes to produce per k-mer
    * @param k K-mer size
@@ -136,12 +137,12 @@ public:
 
   /**
    * Calculate the hash values of current k-mer and advance to the next k-mer.
-   * NtHash advances one nucleotide at a time until it finds a k-mer with valid
+   * BsHash advances one nucleotide at a time until it finds a k-mer with valid
    * characters (ACGTU) and skips over those with invalid characters (non-ACGTU,
    * including N). This method must be called before hashes() is accessed, for
    * the first and every subsequent hashed kmer. get_pos() may be called at any
    * time to obtain the position of last hashed k-mer or the k-mer to be hashed
-   * if roll() has never been called on this NtHash object. It is important to
+   * if roll() has never been called on this BsHash object. It is important to
    * note that the number of roll() calls is NOT necessarily equal to get_pos(),
    * if there are N's or invalid characters in the hashed sequence.
    * @return \p true on success and \p false otherwise
@@ -194,7 +195,7 @@ public:
 
   /**
    * Peeks the hash values as if roll() was called (without advancing the
-   * NtHash object. The peeked hash values can be obtained through the
+   * BsHash object. The peeked hash values can be obtained through the
    * hashes() method.
    * @return \p true on success and \p false otherwise
    */
@@ -220,7 +221,7 @@ public:
 
   /**
    * Peeks the hash values as if roll() was called for char_in (without
-   * advancing the NtHash object. The peeked hash values can be obtained through
+   * advancing the BsHash object. The peeked hash values can be obtained through
    * the hashes() method.
    * @return \p true on success and \p false otherwise
    */
@@ -257,6 +258,28 @@ public:
     return true;
   }
 
+bool is_methylated() {
+    size_t num_dimers = k / 2;
+    size_t center_idx = pos + (num_dimers / 2) * 2; // guaranteed valid
+
+    char base = seq[center_idx];
+
+    if (conversion_type == "CT") {
+        return base == 'C' || base == 'c';
+    } else {
+        return base == 'G' || base == 'g';
+    }
+}
+
+/**
+ * Check if the forward hash is higher than the reverse hash.
+ * @return true if forward hash > reverse hash, false otherwise
+ */
+bool is_forward_higher() const {
+    return fwd_hash > rev_hash;
+}
+
+
   void sub(const std::vector<unsigned>& positions,
            const std::vector<unsigned char>& new_bases)
   {
@@ -267,7 +290,9 @@ public:
              new_bases,
              get_k(),
              get_hash_num(),
-             hash_arr.get());
+             hash_arr.get(),
+             right_table,
+             left_table);
   }
 
   /**
@@ -278,7 +303,7 @@ public:
 
   /**
    * Get the position of last hashed k-mer or the k-mer to be hashed if roll()
-   * has never been called on this NtHash object.
+   * has never been called on this BsHash object.
    * @return Position of the most recently hashed k-mer's first base-pair
    */
   size_t get_pos() const { return pos; }
