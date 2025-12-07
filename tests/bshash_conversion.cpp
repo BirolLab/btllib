@@ -38,14 +38,34 @@ main()
   {
     PRINT_TEST_NAME("k-mer rolling")
 
-    std::string seq = "AGTCAGTCA";
+    std::string seq = "AGTCAGTCAGTCA";
     unsigned h = 3;
     unsigned k = 5;
+    //AGTCA
+    //TGACT
 
     btllib::BSHashConversion nthash(seq, h, k, "CT");
+    /*nthash.roll();
+    nthash.roll();
+    std::cerr << "CT forrward: " << nthash.get_forward_hash() << std::endl;
+    std::cerr << "CT reverse: " << nthash.get_reverse_hash() << std::endl;
+    btllib::BSHashConversion nthash2("GTCAG", h, k, "CT");
+    nthash2.roll();
+    std::cerr << "CT forrward: " << nthash2.get_forward_hash() << std::endl;
+    std::cerr << "CT reverse: " << nthash2.get_reverse_hash() << std::endl;*/
     std::vector<uint64_t*> hashes;
+    uint64_t fwd_hash = 0;
+    uint64_t final_fwd_hash = 0;
+    uint64_t rev_hash = 0;
+    uint64_t final_rev_hash = 0;
 
     while (nthash.roll()) {
+      if (fwd_hash == 0) {
+        fwd_hash = nthash.get_forward_hash();
+        rev_hash = nthash.get_reverse_hash();
+      }
+      final_fwd_hash = nthash.get_forward_hash();
+      final_rev_hash = nthash.get_reverse_hash();
       uint64_t* h_vals = new uint64_t[h];
       std::copy(nthash.hashes(), nthash.hashes() + h, h_vals);
       hashes.push_back(h_vals);
@@ -54,6 +74,97 @@ main()
     TEST_ASSERT_EQ(hashes.size(), seq.length() - k + 1);
 
     // check same hash value for identical k-mers (first and last)
+    TEST_ASSERT_EQ(fwd_hash, final_fwd_hash);
+    TEST_ASSERT_EQ(rev_hash, final_rev_hash);
+    TEST_ASSERT_ARRAY_EQ(hashes.front(), hashes.back(), h);
+  }
+
+  {
+    PRINT_TEST_NAME("k-mer rolling - (CT Conversion)")
+
+    std::string seq = "AGTCAGTCAGTTA";
+    unsigned h = 3;
+    unsigned k = 5;
+    //AGTCA
+    //TGACT
+
+    btllib::BSHashConversion nthash(seq, h, k, "CT");
+    /*nthash.roll();
+    nthash.roll();
+    std::cerr << "CT forrward: " << nthash.get_forward_hash() << std::endl;
+    std::cerr << "CT reverse: " << nthash.get_reverse_hash() << std::endl;
+    btllib::BSHashConversion nthash2("GTCAG", h, k, "CT");
+    nthash2.roll();
+    std::cerr << "CT forrward: " << nthash2.get_forward_hash() << std::endl;
+    std::cerr << "CT reverse: " << nthash2.get_reverse_hash() << std::endl;*/
+    std::vector<uint64_t*> hashes;
+    uint64_t fwd_hash = 0;
+    uint64_t final_fwd_hash = 0;
+    uint64_t rev_hash = 0;
+    uint64_t final_rev_hash = 0;
+
+    while (nthash.roll()) {
+      if (fwd_hash == 0) {
+        fwd_hash = nthash.get_forward_hash();
+        rev_hash = nthash.get_reverse_hash();
+      }
+      final_fwd_hash = nthash.get_forward_hash();
+      final_rev_hash = nthash.get_reverse_hash();
+      uint64_t* h_vals = new uint64_t[h];
+      std::copy(nthash.hashes(), nthash.hashes() + h, h_vals);
+      hashes.push_back(h_vals);
+    }
+
+    TEST_ASSERT_EQ(hashes.size(), seq.length() - k + 1);
+
+    // check same hash value for identical k-mers (first and last)
+    TEST_ASSERT_EQ(fwd_hash, final_fwd_hash);
+    TEST_ASSERT_EQ(rev_hash, final_rev_hash);
+    TEST_ASSERT_ARRAY_EQ(hashes.front(), hashes.back(), h);
+  }
+
+
+    {
+    PRINT_TEST_NAME("k-mer rolling - (GA Conversion)")
+
+    std::string seq = "AGTCAGTCAATCA";
+    unsigned h = 3;
+    unsigned k = 5;
+    //AGTCA
+    //TGACT
+
+    btllib::BSHashConversion nthash(seq, h, k, "GA");
+    /*nthash.roll();
+    nthash.roll();
+    std::cerr << "CT forrward: " << nthash.get_forward_hash() << std::endl;
+    std::cerr << "CT reverse: " << nthash.get_reverse_hash() << std::endl;
+    btllib::BSHashConversion nthash2("GTCAG", h, k, "CT");
+    nthash2.roll();
+    std::cerr << "CT forrward: " << nthash2.get_forward_hash() << std::endl;
+    std::cerr << "CT reverse: " << nthash2.get_reverse_hash() << std::endl;*/
+    std::vector<uint64_t*> hashes;
+    uint64_t fwd_hash = 0;
+    uint64_t final_fwd_hash = 0;
+    uint64_t rev_hash = 0;
+    uint64_t final_rev_hash = 0;
+
+    while (nthash.roll()) {
+      if (fwd_hash == 0) {
+        fwd_hash = nthash.get_forward_hash();
+        rev_hash = nthash.get_reverse_hash();
+      }
+      final_fwd_hash = nthash.get_forward_hash();
+      final_rev_hash = nthash.get_reverse_hash();
+      uint64_t* h_vals = new uint64_t[h];
+      std::copy(nthash.hashes(), nthash.hashes() + h, h_vals);
+      hashes.push_back(h_vals);
+    }
+
+    TEST_ASSERT_EQ(hashes.size(), seq.length() - k + 1);
+
+    // check same hash value for identical k-mers (first and last)
+    TEST_ASSERT_EQ(fwd_hash, final_fwd_hash);
+    TEST_ASSERT_EQ(rev_hash, final_rev_hash);
     TEST_ASSERT_ARRAY_EQ(hashes.front(), hashes.back(), h);
   }
 
