@@ -35,18 +35,27 @@ reverse_complement(std::string& seq);
 std::string
 get_reverse_complement(const std::string& seq);
 
-
-
+/**
+ * Perform bisulfite conversion on a sequence in-place.
+ *
+ * Depending on the specified conversion type ("CT" or "GA"), each character in
+ * the sequence is replaced with its bisulfite-converted form using the
+ * corresponding conversion table. The argument sequence is modified directly.
+ *
+ * @param seq  Sequence to convert.
+ * @param type Conversion type ("CT" or "GA").
+ */
 void
 bs_conversion(std::string& seq, std::string& type);
 
 /**
- * Obtain a reverse complement of the provided sequence. The argument sequence
- * is left untouched.
+ * Obtain a bisulfite-converted copy of the provided sequence. The argument
+ * sequence is left untouched.
  *
- * @param seq Sequence to reverse complement.
+ * @param seq  Sequence to convert.
+ * @param type Conversion type ("CT" or "GA").
  *
- * @return Reverse complemented sequence.
+ * @return Bisulfite-converted sequence.
  */
 std::string
 get_bs_conversion(const std::string& seq, std::string& type);

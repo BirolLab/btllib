@@ -114,13 +114,13 @@ const char CT_CONVERSION[256] = {
     0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,
 
 //  @    A    B    C    D    E    F    G    H    I    J    K    L    M    N    O
-    0 , 'A', 0, 'T', 0, 0, 0, 'G', 0, 0, 0, 0 ,  0 ,  0 ,  0 ,  0 ,
+    0 , 'A',  0 , 'T',  0 ,  0 ,  0 , 'G',  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,
 
 //  P    Q    R    S    T    U    V    W    X    Y    Z    [    \    ]    ^    _
     0 ,  0 ,  0 ,  0 , 'T',  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,
 
 //  `    a    b    c    d    e    f    g    h    i    j    k    l    m    n    o
-   0 , 'a', 0, 't', 0, 0, 0, 'g', 0, 0, 0, 0 ,  0 ,  0 ,  0 ,  0 ,
+    0 , 'a',  0 , 't',  0 ,  0 ,  0 , 'g',  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,
 
 //  p    q    r    s    t    u    v    w    x    y    z    {    |    }    ~   DEL
     0 ,  0 ,  0 ,  0 , 't',  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,
@@ -146,13 +146,13 @@ const char GA_CONVERSION[256] = {
     0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,
 
 //  @    A    B    C    D    E    F    G    H    I    J    K    L    M    N    O
-    0 , 'A', 0, 'C', 0, 0, 0, 'A', 0, 0, 0, 0 ,  0 ,  0 ,  0 ,  0 ,
+    0 , 'A',  0 , 'C',  0 ,  0 ,  0 , 'A',  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,
 
 //  P    Q    R    S    T    U    V    W    X    Y    Z    [    \    ]    ^    _
     0 ,  0 ,  0 ,  0 , 'T',  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,
 
 //  `    a    b    c    d    e    f    g    h    i    j    k    l    m    n    o
-   0 , 'a', 0, 'c', 0, 0, 0, 'a', 0, 0, 0, 0 ,  0 ,  0 ,  0 ,  0 ,
+    0 , 'a',  0 , 'c',  0 ,  0 ,  0 , 'a',  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,
 
 //  p    q    r    s    t    u    v    w    x    y    z    {    |    }    ~   DEL
     0 ,  0 ,  0 ,  0 , 't',  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,
@@ -186,21 +186,22 @@ get_reverse_complement(const std::string& seq)
 }
 
 void
-bs_conversion(std::string& seq, std::string& type){
-    const char* table =
-        (type == "CT" || type == "ct") ? CT_CONVERSION : GA_CONVERSION;
+bs_conversion(std::string& seq, std::string& type)
+{
+  const char* table =
+    (type == "CT" || type == "ct") ? CT_CONVERSION : GA_CONVERSION;
 
-    std::transform(seq.begin(), seq.end(), seq.begin(),
-        [table](char c) { return table[(unsigned char)c]; });
+  std::transform(seq.begin(), seq.end(), seq.begin(), [table](char c) {
+    return table[(unsigned char)c];
+  });
 }
+
 std::string
-get_bs_conversion(const std::string& seq, std::string& type){
+get_bs_conversion(const std::string& seq, std::string& type)
+{
   std::string conversion(seq);
   bs_conversion(conversion, type);
   return conversion;
 }
-
-
-
 
 } // namespace btllib
