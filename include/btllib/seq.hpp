@@ -46,7 +46,7 @@ get_reverse_complement(const std::string& seq);
  * @param type Conversion type ("CT" or "GA").
  */
 void
-bs_conversion(std::string& seq, std::string& type);
+bs_conversion(std::string& seq, const std::string& type);
 
 /**
  * Obtain a bisulfite-converted copy of the provided sequence. The argument
@@ -58,7 +58,7 @@ bs_conversion(std::string& seq, std::string& type);
  * @return Bisulfite-converted sequence.
  */
 std::string
-get_bs_conversion(const std::string& seq, std::string& type);
+get_bs_conversion(const std::string& seq, const std::string& type);
 
 }
 
