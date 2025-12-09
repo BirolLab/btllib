@@ -20,51 +20,28 @@ namespace btllib::hashing_internals {
  * @return Hash value of k-mer_0
  */
 inline uint64_t
-base_forward_hash(const char* seq, unsigned k, const uint64_t* primitive_tab = SEED_TAB, const uint64_t* dimer_tab = DIMER_TAB, const uint64_t* trimer_tab = TRIMER_TAB, const uint64_t* tetramer_tab = TETRAMER_TAB
-, const uint8_t* convert_tab = CONVERT_TAB)
+base_forward_hash(const char* seq,
+                  unsigned k,
+                  const uint64_t* primitive_tab = SEED_TAB,
+                  const uint64_t* dimer_tab = DIMER_TAB,
+                  const uint64_t* trimer_tab = TRIMER_TAB,
+                  const uint64_t* tetramer_tab = TETRAMER_TAB,
+                  const uint8_t* convert_tab = CONVERT_TAB)
 {
   uint64_t h_val = 0;
-  std::cerr << "abc" << std::endl;
-  
   for (unsigned i = 0; i < k - 3; i += 4) {
     h_val = srol(h_val, 4);
     uint8_t loc = 0;
-    /*loc += 64 * convert_tab[(unsigned char)seq[i]];     // NOLINT
+    loc += 64 * convert_tab[(unsigned char)seq[i]];     // NOLINT
     loc += 16 * convert_tab[(unsigned char)seq[i + 1]]; // NOLINT
     loc += 4 * convert_tab[(unsigned char)seq[i + 2]];
     loc += convert_tab[(unsigned char)seq[i + 3]];
-    h_val ^= tetramer_tab[loc];*/
-    uint8_t v0 = convert_tab[(unsigned char)seq[i]];
-    uint8_t v1 = convert_tab[(unsigned char)seq[i + 1]];
-    uint8_t v2 = convert_tab[(unsigned char)seq[i + 2]];
-    uint8_t v3 = convert_tab[(unsigned char)seq[i + 3]];
-
-    loc += 64 * v0;
-    loc += 16 * v1;
-    loc += 4 * v2;
-    loc += v3;
-
     h_val ^= tetramer_tab[loc];
-
-    // Print each char, its convert_tab value, and the resulting loc
-    std::cerr << "Chars: "
-              << seq[i] << seq[i+1] << seq[i+2] << seq[i+3]
-              << " | Convert: "
-              << static_cast<unsigned>(v0) << " "
-              << static_cast<unsigned>(v1) << " "
-              << static_cast<unsigned>(v2) << " "
-              << static_cast<unsigned>(v3)
-              << " | loc = " << static_cast<unsigned>(loc)
-              << " (0x" << std::hex << static_cast<unsigned>(loc) << std::dec << ")"
-              << std::endl;
   }
-   std::cerr << h_val << std::endl;
-   
   const unsigned remainder = k % 4;
   if (remainder > 0) {
     h_val = srol(h_val, remainder);
   }
-  // TODO double check bug use k = 7 to test
   if (remainder == 3) {
     uint8_t trimer_loc = 0;
     trimer_loc += 16 * convert_tab[(unsigned char)seq[k - 3]]; // NOLINT
@@ -79,7 +56,6 @@ base_forward_hash(const char* seq, unsigned k, const uint64_t* primitive_tab = S
   } else if (remainder == 1) {
     h_val ^= primitive_tab[(unsigned char)seq[k - 1]];
   }
-  std::cerr << h_val << std::endl;
   return h_val;
 }
 
@@ -99,7 +75,7 @@ next_forward_hash(uint64_t fh_val,
                   unsigned char char_in,
                   const uint64_t* primitive_tab = SEED_TAB,
                   const uint64_t* const* right_table = MS_TAB_33R,
-                        const uint64_t* const* left_table = MS_TAB_31L)
+                  const uint64_t* const* left_table = MS_TAB_31L)
 {
   uint64_t h_val = srol(fh_val);
   h_val ^= primitive_tab[char_in];
@@ -122,7 +98,7 @@ prev_forward_hash(uint64_t fh_val,
                   unsigned char char_in,
                   const uint64_t* primitive_tab = SEED_TAB,
                   const uint64_t* const* right_table = MS_TAB_33R,
-                        const uint64_t* const* left_table = MS_TAB_31L)
+                  const uint64_t* const* left_table = MS_TAB_31L)
 {
   uint64_t h_val = fh_val ^ srol_table(char_in, k, right_table, left_table);
   h_val ^= primitive_tab[char_out];
@@ -138,12 +114,16 @@ prev_forward_hash(uint64_t fh_val,
  * @return Hash value of the reverse-complement of k-mer_0
  */
 inline uint64_t
-base_reverse_hash(const char* seq, unsigned k, const uint64_t* primitive_tab = SEED_TAB, const uint64_t* dimer_tab = DIMER_TAB, const uint64_t* trimer_tab = TRIMER_TAB, const uint64_t* tetramer_tab = TETRAMER_TAB
-, const uint8_t* rc_convert_tab = RC_CONVERT_TAB)
+base_reverse_hash(const char* seq,
+                  unsigned k,
+                  const uint64_t* primitive_tab = SEED_TAB,
+                  const uint64_t* dimer_tab = DIMER_TAB,
+                  const uint64_t* trimer_tab = TRIMER_TAB,
+                  const uint64_t* tetramer_tab = TETRAMER_TAB,
+                  const uint8_t* rc_convert_tab = RC_CONVERT_TAB)
 {
   uint64_t h_val = 0;
   const unsigned remainder = k % 4;
-  std::cerr << "cde" << std::endl;
   if (remainder == 3) {
     uint8_t trimer_loc = 0;
     trimer_loc += 16 * rc_convert_tab[(unsigned char)seq[k - 1]]; // NOLINT
@@ -158,42 +138,15 @@ base_reverse_hash(const char* seq, unsigned k, const uint64_t* primitive_tab = S
   } else if (remainder == 1) {
     h_val ^= primitive_tab[(unsigned char)seq[k - 1] & CP_OFF];
   }
-  std::cerr << h_val << std::endl;
   for (int i = (int)(k - remainder) - 1; i >= 3; i -= 4) {
     h_val = srol(h_val, 4);
     uint8_t loc = 0;
-    /*loc += 64 * rc_convert_tab[(unsigned char)seq[i]];     // NOLINT
+    loc += 64 * rc_convert_tab[(unsigned char)seq[i]];     // NOLINT
     loc += 16 * rc_convert_tab[(unsigned char)seq[i - 1]]; // NOLINT
     loc += 4 * rc_convert_tab[(unsigned char)seq[i - 2]];
     loc += rc_convert_tab[(unsigned char)seq[i - 3]];
     h_val ^= tetramer_tab[loc];
-    std::cout << "loc (dec): " << static_cast<unsigned>(loc) << std::endl;*/
-    uint8_t rv0 = rc_convert_tab[(unsigned char)seq[i]];
-uint8_t rv1 = rc_convert_tab[(unsigned char)seq[i - 1]];
-uint8_t rv2 = rc_convert_tab[(unsigned char)seq[i - 2]];
-uint8_t rv3 = rc_convert_tab[(unsigned char)seq[i - 3]];
-
-loc += 64 * rv0;
-loc += 16 * rv1;
-loc += 4 * rv2;
-loc += rv3;
-
-h_val ^= tetramer_tab[loc];
-
-// Print each char, its rc_convert_tab value, and the resulting loc
-std::cerr << "Chars (rev): "
-          << seq[i] << seq[i-1] << seq[i-2] << seq[i-3]
-          << " | RC Convert: "
-          << static_cast<unsigned>(rv0) << " "
-          << static_cast<unsigned>(rv1) << " "
-          << static_cast<unsigned>(rv2) << " "
-          << static_cast<unsigned>(rv3)
-          << " | loc = " << static_cast<unsigned>(loc)
-          << " (0x" << std::hex << static_cast<unsigned>(loc) << std::dec << ")"
-          << std::endl;
   }
-  
-  std::cerr << h_val << std::endl;
   return h_val;
 }
 
@@ -214,9 +167,10 @@ next_reverse_hash(uint64_t rh_val,
                   unsigned char char_in,
                   const uint64_t* primitive_tab = SEED_TAB,
                   const uint64_t* const* right_table = MS_TAB_33R,
-                        const uint64_t* const* left_table = MS_TAB_31L)
+                  const uint64_t* const* left_table = MS_TAB_31L)
 {
-  uint64_t h_val = rh_val ^ srol_table(char_in & CP_OFF, k, right_table, left_table);
+  uint64_t h_val =
+    rh_val ^ srol_table(char_in & CP_OFF, k, right_table, left_table);
   h_val ^= primitive_tab[char_out & CP_OFF];
   h_val = sror(h_val);
   return h_val;
@@ -237,7 +191,7 @@ prev_reverse_hash(uint64_t rh_val,
                   unsigned char char_in,
                   const uint64_t* primitive_tab = SEED_TAB,
                   const uint64_t* const* right_table = MS_TAB_33R,
-                        const uint64_t* const* left_table = MS_TAB_31L)
+                  const uint64_t* const* left_table = MS_TAB_31L)
 {
   uint64_t h_val = srol(rh_val);
   h_val ^= primitive_tab[char_in & CP_OFF];
@@ -268,8 +222,8 @@ sub_hash(uint64_t fh_val,
          unsigned k,
          unsigned m,
          uint64_t* h_val,
-                  const uint64_t* const* right_table = MS_TAB_33R,
-                        const uint64_t* const* left_table = MS_TAB_31L)
+         const uint64_t* const* right_table = MS_TAB_33R,
+         const uint64_t* const* left_table = MS_TAB_31L)
 {
   uint64_t b_val = 0;
 
@@ -277,10 +231,12 @@ sub_hash(uint64_t fh_val,
     const auto pos = positions[i];
     const auto new_base = new_bases[i];
 
-    fh_val ^= srol_table((unsigned char)kmer_seq[pos], k - 1 - pos, right_table, left_table);
+    fh_val ^= srol_table(
+      (unsigned char)kmer_seq[pos], k - 1 - pos, right_table, left_table);
     fh_val ^= srol_table(new_base, k - 1 - pos, right_table, left_table);
 
-    rh_val ^= srol_table((unsigned char)kmer_seq[pos] & CP_OFF, pos, right_table, left_table);
+    rh_val ^= srol_table(
+      (unsigned char)kmer_seq[pos] & CP_OFF, pos, right_table, left_table);
     rh_val ^= srol_table(new_base & CP_OFF, pos, right_table, left_table);
   }
 
@@ -556,7 +512,6 @@ private:
   uint64_t fwd_hash = 0;
   uint64_t rev_hash = 0;
   std::unique_ptr<uint64_t[]> hash_arr;
-
 
   /**
    * Initialize the internal state of the iterator

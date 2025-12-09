@@ -57,9 +57,10 @@ srol(const uint64_t x, const unsigned d)
  * @return Split-rotation result
  */
 inline uint64_t
-srol_table(unsigned char c, unsigned d,
-                  const uint64_t* const* right_table,
-                        const uint64_t* const* left_table );
+srol_table(unsigned char c,
+           unsigned d,
+           const uint64_t* const* right_table,
+           const uint64_t* const* left_table);
 
 /**
  * Split a 64-bit word into 33 and 31-bit sub-words and right-rotate them
@@ -169,7 +170,6 @@ const uint64_t SEED_TAB[ASCII_SIZE] = {
   SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, // 240..247
   SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N  // 248..255
 };
-
 
 const uint64_t A33R[33] = {
   0x195c60474, 0x12b8c08e9, 0x571811d3,  0xae3023a6,  0x15c60474c, 0xb8c08e99,
@@ -347,12 +347,13 @@ const uint64_t* const MS_TAB_31L[ASCII_SIZE] = {
   N31L, N31L, N31L, N31L, N31L, N31L, N31L, N31L  // 248..255
 };
 
-
 inline uint64_t
-srol_table(unsigned char c, unsigned d, const uint64_t* const* right_table = MS_TAB_33R,
-                        const uint64_t* const* left_table = MS_TAB_31L)
+srol_table(unsigned char c,
+           unsigned d,
+           const uint64_t* const* right_table = MS_TAB_33R,
+           const uint64_t* const* left_table = MS_TAB_31L)
 {
-  return (left_table[c][d < 31 ? d : d % 31] | /* NOLINT */
+  return (left_table[c][d < 31 ? d : d % 31] |  /* NOLINT */
           right_table[c][d < 33 ? d : d % 33]); /* NOLINT */
 }
 
