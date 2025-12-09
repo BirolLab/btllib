@@ -13,8 +13,6 @@
 #include <btllib/nthash_kmer.hpp>
 #include <btllib/status.hpp>
 
-
-
 namespace btllib {
 
 using hashing_internals::base_forward_hash;
@@ -44,16 +42,16 @@ using hashing_internals::BS_CT_RC_CONVERT_TAB;
 using hashing_internals::BS_GA_RC_CONVERT_TAB;
 
 using hashing_internals::BS_CT_DIMER_TAB;
-using hashing_internals::BS_CT_TRIMER_TAB;
 using hashing_internals::BS_CT_TETRAMER_TAB;
+using hashing_internals::BS_CT_TRIMER_TAB;
 using hashing_internals::BS_GA_DIMER_TAB;
-using hashing_internals::BS_GA_TRIMER_TAB;
 using hashing_internals::BS_GA_TETRAMER_TAB;
+using hashing_internals::BS_GA_TRIMER_TAB;
 
 /**
  * Directional BS-seq k-mer hashing.
  */
-class BSHashDirectional
+class BsHashDirectional
 {
 
 public:
@@ -63,17 +61,17 @@ public:
    * @param seq_len Length of the sequence
    * @param num_hashes Number of hashes to generate per k-mer
    * @param k K-mer size
-   * @param conversion_type Bisulfite conversion mode ("CT" or "GA"), 
+   * @param conversion_type Bisulfite conversion mode ("CT" or "GA"),
    *        used to determine how bases are interpreted during hashing.
    * @param pos Position in the sequence to start hashing from
    */
-  BSHashDirectional(const char* seq,
-         size_t seq_len,
-         hashing_internals::NUM_HASHES_TYPE num_hashes,
-         hashing_internals::K_TYPE k,
-         std::string conversion_type,
-         size_t pos = 0)
-         : seq(seq)
+  BsHashDirectional(const char* seq,
+                    size_t seq_len,
+                    hashing_internals::NUM_HASHES_TYPE num_hashes,
+                    hashing_internals::K_TYPE k,
+                    std::string conversion_type,
+                    size_t pos = 0)
+    : seq(seq)
     , seq_len(seq_len)
     , num_hashes(num_hashes)
     , k(k)
@@ -84,7 +82,7 @@ public:
   {
     check_error(k == 0, "BsHash: k must be greater than 0");
     check_error(k % 2 == 1, "BsHash: k must be even");
-    check_error((k/2) % 2 == 0, "BsHash: k must have odd number of dimers");
+    check_error((k / 2) % 2 == 0, "BsHash: k must have odd number of dimers");
     check_error(this->seq_len < k,
                 "BsHash: sequence length (" + std::to_string(this->seq_len) +
                   ") is smaller than k (" + std::to_string(k) + ")");
@@ -101,36 +99,38 @@ public:
       primitive_tab = BS_CT_SEED_TAB;
 
       right_table = BS_CT_MS_TAB_33R;
-      left_table  = BS_CT_MS_TAB_31L;
+      left_table = BS_CT_MS_TAB_31L;
 
-      convert_tab     = BS_CT_CONVERT_TAB;
-      rc_convert_tab  = BS_CT_RC_CONVERT_TAB;
+      convert_tab = BS_CT_CONVERT_TAB;
+      rc_convert_tab = BS_CT_RC_CONVERT_TAB;
 
       dimer_tab = BS_CT_DIMER_TAB;
       rc_dimer_tab = BS_GA_DIMER_TAB;
       trimer_tab = BS_CT_TRIMER_TAB;
-      rc_trimer_tab =  BS_GA_TRIMER_TAB;
-      tetramer_tab = BS_CT_TETRAMER_TAB;;
-      rc_tetramer_tab= BS_GA_TETRAMER_TAB;
+      rc_trimer_tab = BS_GA_TRIMER_TAB;
+      tetramer_tab = BS_CT_TETRAMER_TAB;
+      ;
+      rc_tetramer_tab = BS_GA_TETRAMER_TAB;
     } else if (conversion_type == "GA") {
       meth_base_idx = center_dimer_start + 1;
 
-      primitive_tab    = BS_GA_SEED_TAB;
+      primitive_tab = BS_GA_SEED_TAB;
 
-      right_table      = BS_GA_MS_TAB_33R;
-      left_table       = BS_GA_MS_TAB_31L;
+      right_table = BS_GA_MS_TAB_33R;
+      left_table = BS_GA_MS_TAB_31L;
 
-      convert_tab      = BS_GA_CONVERT_TAB;
-      rc_convert_tab   = BS_GA_RC_CONVERT_TAB;
+      convert_tab = BS_GA_CONVERT_TAB;
+      rc_convert_tab = BS_GA_RC_CONVERT_TAB;
 
-      dimer_tab        = BS_GA_DIMER_TAB;
-      rc_dimer_tab     = BS_CT_DIMER_TAB;
-      trimer_tab       = BS_GA_TRIMER_TAB;
-      rc_trimer_tab    = BS_CT_TRIMER_TAB;
-      tetramer_tab     = BS_GA_TETRAMER_TAB;
-      rc_tetramer_tab  = BS_CT_TETRAMER_TAB;
+      dimer_tab = BS_GA_DIMER_TAB;
+      rc_dimer_tab = BS_CT_DIMER_TAB;
+      trimer_tab = BS_GA_TRIMER_TAB;
+      rc_trimer_tab = BS_CT_TRIMER_TAB;
+      tetramer_tab = BS_GA_TETRAMER_TAB;
+      rc_tetramer_tab = BS_CT_TETRAMER_TAB;
     } else {
-        check_error(true, "Unsupported conversion_type. Must be CT or GA, as capitalized.");
+      check_error(
+        true, "Unsupported conversion_type. Must be CT or GA, as capitalized.");
     }
   }
 
@@ -139,20 +139,25 @@ public:
    * @param seq Sequence string
    * @param num_hashes Number of hashes to produce per k-mer
    * @param k K-mer size
-   * @param conversion_type Bisulfite conversion mode ("CT" or "GA"), 
+   * @param conversion_type Bisulfite conversion mode ("CT" or "GA"),
    *        used to determine how bases are interpreted during hashing.
    * @param pos Position in sequence to start hashing from
    */
-  BSHashDirectional(const std::string& seq,
-         hashing_internals::NUM_HASHES_TYPE num_hashes,
-         hashing_internals::K_TYPE k,
-         std::string conversion_type,
-         size_t pos = 0)
-    : BSHashDirectional(seq.data(), seq.size(), num_hashes, k, conversion_type, pos)
+  BsHashDirectional(const std::string& seq,
+                    hashing_internals::NUM_HASHES_TYPE num_hashes,
+                    hashing_internals::K_TYPE k,
+                    std::string conversion_type,
+                    size_t pos = 0)
+    : BsHashDirectional(seq.data(),
+                        seq.size(),
+                        num_hashes,
+                        k,
+                        conversion_type,
+                        pos)
   {
   }
 
-  BSHashDirectional(const BSHashDirectional& obj)
+  BsHashDirectional(const BsHashDirectional& obj)
     : seq(obj.seq)
     , seq_len(obj.seq_len)
     , num_hashes(obj.num_hashes)
@@ -174,15 +179,12 @@ public:
     , rc_trimer_tab(obj.rc_trimer_tab)
     , tetramer_tab(obj.tetramer_tab)
     , rc_tetramer_tab(obj.rc_tetramer_tab)
-{
+  {
     std::memcpy(
-        hash_arr.get(),
-        obj.hash_arr.get(),
-        num_hashes * sizeof(uint64_t)
-    );
-}
+      hash_arr.get(), obj.hash_arr.get(), num_hashes * sizeof(uint64_t));
+  }
 
- BSHashDirectional(BSHashDirectional&&) = default;
+  BsHashDirectional(BsHashDirectional&&) = default;
   /**
    * Calculate the hash values of current k-mer and advance to the next k-mer.
    * BsHash advances one nucleotide at a time until it finds a k-mer with valid
@@ -208,8 +210,20 @@ public:
       pos += k;
       return init();
     }
-    fwd_hash = next_forward_hash(fwd_hash, k, seq[pos], seq[pos + k], primitive_tab, right_table, left_table);
-    rev_hash = next_reverse_hash(rev_hash, k, seq[pos], seq[pos + k], primitive_tab, right_table, left_table);
+    fwd_hash = next_forward_hash(fwd_hash,
+                                 k,
+                                 seq[pos],
+                                 seq[pos + k],
+                                 primitive_tab,
+                                 right_table,
+                                 left_table);
+    rev_hash = next_reverse_hash(rev_hash,
+                                 k,
+                                 seq[pos],
+                                 seq[pos + k],
+                                 primitive_tab,
+                                 right_table,
+                                 left_table);
     extend_hashes(fwd_hash, rev_hash, k, num_hashes, hash_arr.get());
     ++pos;
     return true;
@@ -234,8 +248,20 @@ public:
     if (SEED_TAB[(unsigned char)seq[pos - 1]] == SEED_N) {
       return false;
     }
-    fwd_hash = prev_forward_hash(fwd_hash, k, seq[pos + k - 1], seq[pos - 1], primitive_tab, right_table, left_table);
-    rev_hash = prev_reverse_hash(rev_hash, k, seq[pos + k - 1], seq[pos - 1], primitive_tab, right_table, left_table);
+    fwd_hash = prev_forward_hash(fwd_hash,
+                                 k,
+                                 seq[pos + k - 1],
+                                 seq[pos - 1],
+                                 primitive_tab,
+                                 right_table,
+                                 left_table);
+    rev_hash = prev_reverse_hash(rev_hash,
+                                 k,
+                                 seq[pos + k - 1],
+                                 seq[pos - 1],
+                                 primitive_tab,
+                                 right_table,
+                                 left_table);
     extend_hashes(fwd_hash, rev_hash, k, num_hashes, hash_arr.get());
     --pos;
     return true;
@@ -281,8 +307,10 @@ public:
     if (SEED_TAB[(unsigned char)char_in] == SEED_N) {
       return false;
     }
-    const uint64_t fwd = next_forward_hash(fwd_hash, k, seq[pos], char_in, primitive_tab, right_table, left_table);
-    const uint64_t rev = next_reverse_hash(rev_hash, k, seq[pos], char_in, primitive_tab, right_table, left_table);
+    const uint64_t fwd = next_forward_hash(
+      fwd_hash, k, seq[pos], char_in, primitive_tab, right_table, left_table);
+    const uint64_t rev = next_reverse_hash(
+      rev_hash, k, seq[pos], char_in, primitive_tab, right_table, left_table);
     extend_hashes(fwd, rev, k, num_hashes, hash_arr.get());
     return true;
   }
@@ -300,36 +328,38 @@ public:
       return false;
     }
     const unsigned char char_out = seq[pos + k - 1];
-    const uint64_t fwd = prev_forward_hash(fwd_hash, k, char_out, char_in, primitive_tab, right_table, left_table);
-    const uint64_t rev = prev_reverse_hash(rev_hash, k, char_out, char_in, primitive_tab, right_table, left_table);
+    const uint64_t fwd = prev_forward_hash(
+      fwd_hash, k, char_out, char_in, primitive_tab, right_table, left_table);
+    const uint64_t rev = prev_reverse_hash(
+      rev_hash, k, char_out, char_in, primitive_tab, right_table, left_table);
     extend_hashes(fwd, rev, k, num_hashes, hash_arr.get());
     return true;
   }
 
-    /**
+  /**
    * Check if the k-mer center position is methylated based on conversion type.
    * For CT conversion, methylation corresponds to a cytosine ('C'/'c').
    * For GA conversion, methylation corresponds to a guanine ('G'/'g').
    *
-   * @return true if the base at the methylation index indicates methylation, false otherwise.
+   * @return true if the base at the methylation index indicates methylation,
+   * false otherwise.
    */
 
-  bool is_methylated() {
-      char base = seq[pos + meth_base_idx];
+  bool is_methylated()
+  {
+    char base = seq[pos + meth_base_idx];
 
-      if (conversion_type == "CT")
-          return base == 'C' || base == 'c';
-      else
-          return base == 'G' || base == 'g';
+    if (conversion_type == "CT")
+      return base == 'C' || base == 'c';
+    else
+      return base == 'G' || base == 'g';
   }
+
   /**
    * Check if the forward hash is higher than the reverse hash.
    * @return true if forward hash > reverse hash, false otherwise
    */
-  bool is_forward_higher() const {
-      return fwd_hash > rev_hash;
-  }
-
+  bool is_forward_higher() const { return fwd_hash > rev_hash; }
 
   void sub(const std::vector<unsigned>& positions,
            const std::vector<unsigned char>& new_bases)
@@ -401,8 +431,8 @@ private:
   const uint64_t* const* right_table;
   const uint64_t* const* left_table;
 
-  const uint8_t*  convert_tab;
-  const uint8_t*  rc_convert_tab; 
+  const uint8_t* convert_tab;
+  const uint8_t* rc_convert_tab;
 
   const uint64_t* dimer_tab;
   const uint64_t* rc_dimer_tab;
@@ -430,13 +460,24 @@ private:
     if (pos > seq_len - k) {
       return false;
     }
-    fwd_hash = base_forward_hash(seq + pos, k, primitive_tab, dimer_tab, trimer_tab, tetramer_tab, convert_tab);
-    rev_hash = base_reverse_hash(seq + pos, k, primitive_tab, rc_dimer_tab, rc_trimer_tab, rc_tetramer_tab, rc_convert_tab);
+    fwd_hash = base_forward_hash(seq + pos,
+                                 k,
+                                 primitive_tab,
+                                 dimer_tab,
+                                 trimer_tab,
+                                 tetramer_tab,
+                                 convert_tab);
+    rev_hash = base_reverse_hash(seq + pos,
+                                 k,
+                                 primitive_tab,
+                                 rc_dimer_tab,
+                                 rc_trimer_tab,
+                                 rc_tetramer_tab,
+                                 rc_convert_tab);
     extend_hashes(fwd_hash, rev_hash, k, num_hashes, hash_arr.get());
     initialized = true;
     return true;
   }
-  
 };
 
 } // namespace btllib
