@@ -17,7 +17,7 @@ main()
     unsigned h = 3;
     unsigned k = 6;
 
-    btllib::BSHashConversion bshash(seq, h, k, "CT");
+    btllib::BSHashDirectional bshash(seq, h, k, "CT");
     std::vector<uint64_t*> hashes;
     uint64_t fwd_hash = 0;
     uint64_t final_fwd_hash = 0;
@@ -43,13 +43,13 @@ main()
   }
 
   {
-    PRINT_TEST_NAME("k-mer rolling - (CT Conversion)")
+    PRINT_TEST_NAME("k-mer rolling - (CT Directional)")
 
     std::string seq = "AGTCAGTCAGTTAG";
     unsigned h = 3;
     unsigned k = 6;
 
-    btllib::BSHashConversion bshash(seq, h, k, "CT");
+    btllib::BSHashDirectional bshash(seq, h, k, "CT");
     std::vector<uint64_t*> hashes;
     uint64_t fwd_hash = 0;
     uint64_t final_fwd_hash = 0;
@@ -76,14 +76,14 @@ main()
 
 
   {
-    PRINT_TEST_NAME("k-mer rolling - (GA Conversion)")
+    PRINT_TEST_NAME("k-mer rolling - (GA Directional)")
 
     std::string seq = "AGTCAGTCAATCAA";
     unsigned h = 3;
     unsigned k = 6;
 
 
-    btllib::BSHashConversion bshash(seq, h, k, "GA");
+    btllib::BSHashDirectional bshash(seq, h, k, "GA");
     std::vector<uint64_t*> hashes;
     uint64_t fwd_hash = 0;
     uint64_t final_fwd_hash = 0;
@@ -113,16 +113,16 @@ main()
 
     std::string seq = "ACGTACACTGGACTGAGTCTATCG";
 
-    btllib::BSHashConversion bshash(seq, 3, seq.size() - 2, "CT");
+    btllib::BSHashDirectional bshash(seq, 3, seq.size() - 2, "CT");
     /* 19-mers of kmer*/
     std::string kmer1 = seq.substr(0, 22);
     std::string kmer2 = seq.substr(1, 22);
     std::string kmer3 = seq.substr(2, 22);
 
-    btllib::BSHashConversion bshash_vector[] = {
-      btllib::BSHashConversion(kmer1, bshash.get_hash_num(), kmer1.size(), "CT"),
-      btllib::BSHashConversion(kmer2, bshash.get_hash_num(), kmer2.size(), "CT"),
-      btllib::BSHashConversion(kmer3, bshash.get_hash_num(), kmer3.size(), "CT")
+    btllib::BSHashDirectional bshash_vector[] = {
+      btllib::BSHashDirectional(kmer1, bshash.get_hash_num(), kmer1.size(), "CT"),
+      btllib::BSHashDirectional(kmer2, bshash.get_hash_num(), kmer2.size(), "CT"),
+      btllib::BSHashDirectional(kmer3, bshash.get_hash_num(), kmer3.size(), "CT")
     };
 
     size_t i;
@@ -141,8 +141,8 @@ main()
     std::string seq_r = "TTAGACTCAGTCCAGTGTACGT";
     unsigned h = 3;
 
-    btllib::BSHashConversion bshash_f(seq_f, h, seq_f.size(), "CT");
-    btllib::BSHashConversion bshash_r(seq_r, h, seq_r.size(), "GA");
+    btllib::BSHashDirectional bshash_f(seq_f, h, seq_f.size(), "CT");
+    btllib::BSHashDirectional bshash_r(seq_r, h, seq_r.size(), "GA");
 
     bshash_f.roll();
     bshash_r.roll();
@@ -157,7 +157,7 @@ main()
     unsigned h = 3;
     unsigned k = 6;
 
-    btllib::BSHashConversion bshash(seq, h, k, "CT");
+    btllib::BSHashDirectional bshash(seq, h, k, "CT");
     std::stack<uint64_t*> hashes;
 
     while (bshash.roll()) {
@@ -181,7 +181,7 @@ main()
     unsigned h = 3;
     unsigned k = 6;
 
-    btllib::BSHashConversion bshash(seq, h, k, "CT");
+    btllib::BSHashDirectional bshash(seq, h, k, "CT");
     bshash.roll();
 
     size_t steps = 3;
@@ -206,7 +206,7 @@ main()
     seq_with_ns[seq_with_ns.size() / 2] = 'N';
     seq_with_ns[seq_with_ns.size() / 2 + 1] = 'N';
     unsigned k = (seq.size() - 2) / 2 - 1;
-    btllib::BSHashConversion bshash(seq_with_ns, 3, k, "CT");
+    btllib::BSHashDirectional bshash(seq_with_ns, 3, k, "CT");
 
     std::vector<uint64_t> positions;
     for (size_t i = 0; i < seq_with_ns.size() / 2 - k + 1; i++) {
@@ -231,8 +231,8 @@ main()
     std::string seq = "ACGTACACTGGACTGAGTCTAA";
     std::string sub = "ACGCGCACTGGACTGAGTCTAA";
 
-    btllib::BSHashConversion bshash(seq, 3, seq.size(), "CT");
-    btllib::BSHashConversion bshash_subbed(sub, 3, sub.size(), "CT");
+    btllib::BSHashDirectional bshash(seq, 3, seq.size(), "CT");
+    btllib::BSHashDirectional bshash_subbed(sub, 3, sub.size(), "CT");
 
     bshash.roll();
     bshash.sub({ 3, 4 }, { 'C', 'G' });
@@ -254,10 +254,10 @@ main()
     std::string rc_seq_no_meth = "TTCAAT";
 
 
-    btllib::BSHashConversion bshash(seq, 3, seq.size(), "CT");
-    btllib::BSHashConversion bshash_no_meth(seq_no_meth, 3, seq_no_meth.size(),"CT");
-    btllib::BSHashConversion bshash_rc(rc_seq, 3, rc_seq.size(), "GA");
-    btllib::BSHashConversion bshash_rc_no_meth(rc_seq_no_meth, 3, rc_seq_no_meth.size(), "GA");
+    btllib::BSHashDirectional bshash(seq, 3, seq.size(), "CT");
+    btllib::BSHashDirectional bshash_no_meth(seq_no_meth, 3, seq_no_meth.size(),"CT");
+    btllib::BSHashDirectional bshash_rc(rc_seq, 3, rc_seq.size(), "GA");
+    btllib::BSHashDirectional bshash_rc_no_meth(rc_seq_no_meth, 3, rc_seq_no_meth.size(), "GA");
 
 
     bshash.roll();
