@@ -53,7 +53,7 @@ using hashing_internals::BS_GA_TETRAMER_TAB;
 /**
  * Directional BS-seq k-mer hashing.
  */
-class BSHashConversion
+class BSHashDirectional
 {
 
 public:
@@ -67,7 +67,7 @@ public:
    *        used to determine how bases are interpreted during hashing.
    * @param pos Position in the sequence to start hashing from
    */
-  BSHashConversion(const char* seq,
+  BSHashDirectional(const char* seq,
          size_t seq_len,
          hashing_internals::NUM_HASHES_TYPE num_hashes,
          hashing_internals::K_TYPE k,
@@ -143,16 +143,16 @@ public:
    *        used to determine how bases are interpreted during hashing.
    * @param pos Position in sequence to start hashing from
    */
-  BSHashConversion(const std::string& seq,
+  BSHashDirectional(const std::string& seq,
          hashing_internals::NUM_HASHES_TYPE num_hashes,
          hashing_internals::K_TYPE k,
          std::string conversion_type,
          size_t pos = 0)
-    : BSHashConversion(seq.data(), seq.size(), num_hashes, k, conversion_type, pos)
+    : BSHashDirectional(seq.data(), seq.size(), num_hashes, k, conversion_type, pos)
   {
   }
 
-  BSHashConversion(const BSHashConversion& obj)
+  BSHashDirectional(const BSHashDirectional& obj)
     : seq(obj.seq)
     , seq_len(obj.seq_len)
     , num_hashes(obj.num_hashes)
@@ -182,7 +182,7 @@ public:
     );
 }
 
- BSHashConversion(BSHashConversion&&) = default;
+ BSHashDirectional(BSHashDirectional&&) = default;
   /**
    * Calculate the hash values of current k-mer and advance to the next k-mer.
    * BsHash advances one nucleotide at a time until it finds a k-mer with valid
