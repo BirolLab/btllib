@@ -1540,9 +1540,6 @@ base_forward_bs_hash(const char* seq,
   uint64_t h0 = 0;
   uint64_t h1 = 0;
 
-  std::cout << "[BASE_HASH] Computing forward hashes, k=" << k
-            << ", has_second=" << has_second << "\n";
-
   for (unsigned i = 0; i < k; i += 2) {
     h0 = srol(h0, 1);
     const char c1 = seq[i];
@@ -1551,9 +1548,6 @@ base_forward_bs_hash(const char* seq,
     const uint8_t b = BS_CONVERT_TAB[(unsigned char)c2];
     const uint8_t loc = 10 * a + b; // yields 11, 12, ..., 44
     h0 ^= DIMER_TAB[loc];
-
-    std::cout << "[BASE_HASH] h0 loop " << i << " | dimer='" << c1 << c2
-              << "' loc=" << (unsigned)loc << " | h0=" << h0 << "\n";
   }
 
   if (!has_second)
@@ -1567,9 +1561,6 @@ base_forward_bs_hash(const char* seq,
     const uint8_t b = BS_CONVERT_TAB[(unsigned char)c2];
     const uint8_t loc = 10 * a + b;
     h1 ^= DIMER_TAB[loc];
-
-    std::cout << "[BASE_HASH] h1 loop " << i << " | dimer='" << c1 << c2
-              << "' loc=" << (unsigned)loc << " | h1=" << h1 << "\n";
   }
 
   return { h0, h1 };
@@ -2627,15 +2618,11 @@ next_forward_bs_hash(uint64_t fh_val,
                      const uint64_t* const* TAB_33R,
                      const uint64_t* const* TAB_31L)
 {
-  // Compute indices for outgoing and incoming dimers
-  // Each dimer is encoded as (10 * first + second)
   uint8_t out_idx = 10 * BS_CONVERT_TAB[char_out1] + BS_CONVERT_TAB[char_out2];
   uint8_t in_idx = 10 * BS_CONVERT_TAB[char_in1] + BS_CONVERT_TAB[char_in2];
 
-  // Rotate the hash left by 2 since we move by two bases
   uint64_t h_val = srol(fh_val);
 
-  // XOR out the old dimer and XOR in the new dimer
   h_val ^= srol_bs_table(out_idx, k, TAB_33R, TAB_31L);
   h_val ^= DIMER_TAB[in_idx];
 
@@ -2653,8 +2640,6 @@ prev_forward_bs_hash(uint64_t fh_val,
                      const uint64_t* const* TAB_33R,
                      const uint64_t* const* TAB_31L)
 {
-  // Compute indices for outgoing and incoming dimers
-  // Each dimer is encoded as (10 * first + second)
   uint8_t out_idx = 10 * BS_CONVERT_TAB[char_out1] + BS_CONVERT_TAB[char_out2];
   uint8_t in_idx = 10 * BS_CONVERT_TAB[char_in1] + BS_CONVERT_TAB[char_in2];
 
@@ -2675,20 +2660,18 @@ base_reverse_bs_hash(const char* seq,
   uint64_t h0 = 0;
   uint64_t h1 = 0;
 
-  // Process pairs from the end for h0
+
   for (int i = (int)k - 1; i >= 1; i -= 2) {
     h0 = srol(h0, 1);
     const uint8_t a = BS_RC_CONVERT_TAB[(unsigned char)seq[i]];
     const uint8_t b = BS_RC_CONVERT_TAB[(unsigned char)seq[i - 1]];
-    const uint8_t loc = 10 * a + b; // yields 11..44
-    h0 ^= DIMER_TAB[loc];           // first element of pointer table
+    const uint8_t loc = 10 * a + b;
+    h0 ^= DIMER_TAB[loc];
   }
 
-  // If length exactly k, return only h0
   if (!has_second)
     return { h0, 0 };
 
-  // Offset by 1 for second hash (mirroring h1 in forward)
   for (int i = (int)k; i >= 2; i -= 2) {
     h1 = srol(h1, 1);
     const uint8_t a = BS_RC_CONVERT_TAB[(unsigned char)seq[i]];
@@ -2741,5 +2724,6 @@ prev_reverse_bs_hash(uint64_t rh_val,
   h_val ^= srol_bs_table(out_idx, k, TAB_33R, TAB_31L);
   return h_val;
 }
+
 
 } // namespace btllib::hashing_internals
