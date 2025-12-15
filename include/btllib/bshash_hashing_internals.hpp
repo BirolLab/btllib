@@ -2660,7 +2660,6 @@ base_reverse_bs_hash(const char* seq,
   uint64_t h0 = 0;
   uint64_t h1 = 0;
 
-
   for (int i = (int)k - 1; i >= 1; i -= 2) {
     h0 = srol(h0, 1);
     const uint8_t a = BS_RC_CONVERT_TAB[(unsigned char)seq[i]];
@@ -2724,6 +2723,5 @@ prev_reverse_bs_hash(uint64_t rh_val,
   h_val ^= srol_bs_table(out_idx, k, TAB_33R, TAB_31L);
   return h_val;
 }
-
 
 } // namespace btllib::hashing_internals
