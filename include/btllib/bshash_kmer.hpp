@@ -257,13 +257,11 @@ public:
    *
    * @return The center dimer of the current k-mer.
    */
-  std::string center_dimer()
+  std::string_view center_dimer() const
   {
-
-    size_t num_dimers = k / 2;
-    size_t center_idx = pos + (num_dimers / 2) * 2;
-
-    return std::string{ seq[center_idx], seq[center_idx + 1] };
+    constexpr size_t DIMER_LEN = 2;
+    const size_t center_idx = pos + (k / 4) * DIMER_LEN;
+    return std::string_view(seq + center_idx, DIMER_LEN);
   }
 
   /**
