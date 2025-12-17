@@ -10,6 +10,25 @@
 int
 main()
 {
+    {
+    PRINT_TEST_NAME("Real Test Case")
+
+    std::string first34 = "ATCACGCNTAAACTTTTTTTTTTTTTTTTTTTTTTTTTTTNTTCCCCACCAGATCGGAAGAGCACACGTCTTAAAANCAGTCAATGGAGTTTATCGCGTTTGCCGTCGTCGGCTTGNAAAGGNGGGGGGGGGGGGGGGGGGGGGGGGGGGG";
+
+    std::string seq = first34;
+    unsigned h = 3;
+    unsigned k = 34;
+
+    btllib::BsHash bshash(seq, h, k, "CG");
+    std::vector<uint64_t*> hashes;
+
+    while (bshash.roll()) {
+      uint64_t* h_vals = new uint64_t[h];
+      std::copy(bshash.hashes(), bshash.hashes() + h, h_vals);
+      hashes.push_back(h_vals);
+      }
+    }
+  
 
   {
     PRINT_TEST_NAME("CG k-mer rolling (64-mer base)")
