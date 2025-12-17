@@ -175,12 +175,14 @@ public:
    */
   bool roll()
   {
+    //std::cerr << "running roll" << std::endl;
+    //std::cerr << "pos: " << pos << std::endl;
     if (!initialized) {
       return init();
     }
 
     auto dimer_valid = [&](size_t p) -> bool {
-      if (p + 1 >= seq_len)
+      if (p + 1 > seq_len - 1)
         return false;
       char c1 = seq[p];
       char c2 = seq[p + 1];
@@ -191,31 +193,40 @@ public:
     };
 
     if (even) {
+      //std::cerr << "checkpoint 1 even" << pos << std::endl;
       if (pos >= seq_len - k)
         return false;
+      //std::cerr << "checkpoint 2 even" << pos << std::endl;
 
       if (!dimer_valid(pos + k - 1)) {
-        pos += k;
+        pos += k + 1;
+        // pos += k;
         return init();
       }
+      //std::cerr << "checkpoint 3 even" << pos << std::endl;
 
       even = false;
       ++pos;
 
       extend_hashes(
         fwd_hashes[1], rev_hashes[1], k, num_hashes, hash_arr.get());
+      //std::cerr << "checkpoint 4 even" << pos << std::endl;
       return true;
     }
-
+    //std::cerr << "checkpoint 0 odd" << pos << std::endl;
+    
     if (pos >= seq_len - k)
       return false;
+    //std::cerr << "checkpoint 1 odd" << pos << std::endl;
 
     if (!dimer_valid(pos + k - 1)) {
-      pos += k;
+      pos += k + 1;
       return init();
     }
+    //std::cerr << "checkpoint 2 odd" << pos << std::endl;
 
     bool can_roll_second = dimer_valid(pos + k);
+    //std::cerr << "checkpoint 3 odd" << pos << std::endl;
 
     for (int i = 0; i < 2; i++) {
       if (i == 0 || can_roll_second) {
@@ -233,6 +244,7 @@ public:
           rev_hashes[i], k, out1, out2, in1, in2, DIMER_TAB, TAB_33R, TAB_31L);
       }
     }
+    //std::cerr << "checkpoint 4 odd" << pos << std::endl;
 
     extend_hashes(fwd_hashes[0], rev_hashes[0], k, num_hashes, hash_arr.get());
 
@@ -453,10 +465,12 @@ private:
 
   bool init()
   {
+    //std::cerr << "running init" << std::endl;
+    even = true;
     bool has_n = true;
-    while (pos < seq_len - k + 1 && has_n) {
+    while (pos <= seq_len - k + 1 && has_n) {
       has_n = false;
-      for (unsigned i = 0; i < k && pos < seq_len - k + 1; i += 2) {
+      for (unsigned i = 0; i < k && pos <= seq_len - k + 1; i += 2) {
         const char c1 = seq[pos + k - i - 2];
         const char c2 = seq[pos + k - i - 1];
         const uint8_t a = BS_CONVERT_TAB[(unsigned char)c1];
@@ -479,8 +493,18 @@ private:
       return false;
     }
 
+    auto dimer_valid = [&](size_t p) -> bool {
+      if (p + 1 > seq_len - 1)
+        return false;
+      char c1 = seq[p];
+      char c2 = seq[p + 1];
+      uint8_t a = BS_CONVERT_TAB[(unsigned char)c1];
+      uint8_t b = BS_CONVERT_TAB[(unsigned char)c2];
+      uint8_t loc = 10 * a + b;
+      return DIMER_TAB[loc] != 0;
+    };
     bool has_second = true;
-    if (pos == seq_len - k) {
+    if (pos == seq_len - k || !dimer_valid(pos + k - 1)) {
       has_second = false;
     }
 
