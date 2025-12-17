@@ -454,9 +454,9 @@ private:
   bool init()
   {
     bool has_n = true;
-    while (pos <= seq_len - k + 1 && has_n) {
+    while (pos < seq_len - k + 1 && has_n) {
       has_n = false;
-      for (unsigned i = 0; i < k && pos <= seq_len - k + 1; i += 2) {
+      for (unsigned i = 0; i < k && pos < seq_len - k + 1; i += 2) {
         const char c1 = seq[pos + k - i - 2];
         const char c2 = seq[pos + k - i - 1];
         const uint8_t a = BS_CONVERT_TAB[(unsigned char)c1];
