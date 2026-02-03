@@ -43,22 +43,21 @@ main()
   int expected_id_count = dna_length / 4;
   double tolerance = 0.1;
 
-  int counter = 0;
   btllib::MIBloomFilter<uint8_t> mi_bf_2(256 * 1024 * 1024, 1, "ntHash");
-  for(btllib::NtHash nthash(random_dna, 1, 15); nthash.roll(); counter++){
+  for(btllib::NtHash nthash(random_dna, 1, 15); nthash.roll();){
 	mi_bf_2.insert_bv(nthash.hashes());
   }
   mi_bf_2.complete_bv_insertion();
   uint8_t ID_array[4] = {0, 1, 2, 3};
   for(auto& id : ID_array){
   	uint8_t ID = id;
-	for(btllib::NtHash nthash(random_dna, 1, 15); nthash.roll(); counter++){
+	for(btllib::NtHash nthash(random_dna, 1, 15); nthash.roll();){
 		mi_bf_2.insert_id(nthash.hashes(), ID);
   	}
   }
   std::vector<uint8_t> results_2(1);
   std::vector<uint32_t> total_counter(4, 0);
-  for(btllib::NtHash nthash(random_dna, 1, 15); nthash.roll(); counter++){
+  for(btllib::NtHash nthash(random_dna, 1, 15); nthash.roll();){
   	results_2 = mi_bf_2.get_id(nthash.hashes());
   	for(auto& res : results_2){
 	      	total_counter[res]++;
@@ -79,7 +78,7 @@ main()
   btllib::MIBloomFilter<uint8_t> mi_bf_3("test.mibf");
   
   std::vector<uint32_t> total_counter_2(4, 0);
-  for(btllib::NtHash nthash(random_dna, 1, 15); nthash.roll(); counter++){
+  for(btllib::NtHash nthash(random_dna, 1, 15); nthash.roll();){
         results_2 = mi_bf_3.get_id(nthash.hashes());
         for(auto& res : results_2){
                 total_counter_2[res]++;
@@ -91,7 +90,7 @@ main()
   }
   // Test mi-Bf is still insertable.
   uint8_t ID = 3;
-  for(btllib::NtHash nthash(random_dna, 1, 15); nthash.roll(); counter++){
+  for(btllib::NtHash nthash(random_dna, 1, 15); nthash.roll();){
   	mi_bf_3.insert_id(nthash.hashes(), ID);
   }
 

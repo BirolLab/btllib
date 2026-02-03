@@ -51,6 +51,11 @@ cmake_options = cmake.subproject_options()
 cmake_options.set_override_option('werror', 'false')
 cmake_options.set_install(false)
 
+if host_machine.cpu_family() == 'aarch64'
+  cmake_options.add_cmake_defines({'ENABLE_LIBCXX': false})
+  cmake_options.add_cmake_defines({'CPPTOML_BUILD_EXAMPLES': false})
+endif
+
 cpptoml_subproject = cmake.subproject('cpptoml', options : cmake_options)
 cpptomp_dep = cpptoml_subproject.dependency('cpptoml')
 
