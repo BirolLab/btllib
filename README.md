@@ -1,6 +1,6 @@
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/bcgsc/btllib?label=Release)](https://github.com/bcgsc/btllib/releases/latest)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/BirolLab/btllib?label=Release)](https://github.com/BirolLab/btllib/releases/latest)
 [![Conda](https://img.shields.io/conda/dn/bioconda/btllib?label=Conda%20downloads)](https://anaconda.org/bioconda/btllib)
-[![Build Status](https://dev.azure.com/bcgsc/btl_public/_apis/build/status/bcgsc.btllib)](https://dev.azure.com/bcgsc/btl_public/_build/latest?definitionId=1)
+[![Build Status](https://dev.azure.com/BirolLab/btl_public/_apis/build/status/BirolLab.btllib)](https://dev.azure.com/BirolLab/btl_public/_build/latest?definitionId=1)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.04720/status.svg)](https://doi.org/10.21105/joss.04720)
 
 [Bioinformatics Technology Lab](http://www.birollab.ca/) common code library in C++ with Python wrappers.
@@ -15,7 +15,7 @@ Installation for users
 The recommended way is to download using [Conda](https://docs.conda.io/en/latest/) package manager:  
 `conda install -c bioconda -c conda-forge btllib`
 
-Alternatively, you can compile the code from source. Download `btllib-$VERSION.tar.gz` from the GitHub [latest release](https://github.com/bcgsc/btllib/releases/latest) where `$VERSION` is the latest btllib version and do the following:
+Alternatively, you can compile the code from source. Download `btllib-$VERSION.tar.gz` from the GitHub [latest release](https://github.com/BirolLab/btllib/releases/latest) where `$VERSION` is the latest btllib version and do the following:
 - `tar xzf btllib-$VERSION.tar.gz` to extract the source code.
 - Have the dependencies ready:
   * GCC 6+ or Clang 5+ (with OpenMP and C++17 support)
@@ -50,12 +50,12 @@ Using the library
 
 Documentation
 ---
-[Docs page](https://bcgsc.github.io/btllib/)
+[Docs page](https://birollab.github.io/btllib/)
 
 For btllib developers
 ---
 - Initial setup:
-  * `git clone --recurse-submodules https://github.com/bcgsc/btllib` in order to obtain all the code.
+  * `git clone --recurse-submodules https://github.com/BirolLab/btllib` in order to obtain all the code.
   * In `btllib` dir, run `meson build` to create a build directory.
 - Every time you want to run tests, in the `build` dir:
   * `ninja wrap` to regenerate wrappers.
@@ -84,9 +84,9 @@ Credits
 ---
 - Author: [Vladimir Nikolic](https://github.com/vlad0x00)
 - Components:
-  - [Hamid Mohamadi](https://github.com/mohamadi) and [Parham Kazemi](https://github.com/parham-k) for [ntHash](https://github.com/bcgsc/ntHash)
-  - [Justin Chu](https://github.com/JustinChu) for [MIBloomFilter](https://github.com/bcgsc/btl_bloomfilter)
-  - [Johnathan Wong](https://github.com/jwcodee) for [aaHash](https://github.com/bcgsc/btllib)
+  - [Hamid Mohamadi](https://github.com/mohamadi) and [Parham Kazemi](https://github.com/parham-k) for [ntHash](https://github.com/BirolLab/ntHash)
+  - [Justin Chu](https://github.com/JustinChu) for [MIBloomFilter](https://github.com/BirolLab/btl_bloomfilter)
+  - [Johnathan Wong](https://github.com/jwcodee) for [aaHash](https://github.com/BirolLab/btllib)
 - Included dependencies:
   - [Chase Geigle](https://github.com/skystrife) for [cpptoml](https://github.com/skystrife/cpptoml)
   - Simon Gog, Timo Beller, Alistair Moffat, and Matthias Petri for [sdsl-lite](https://github.com/simongog/sdsl-lite)
