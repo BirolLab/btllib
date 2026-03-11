@@ -87,7 +87,7 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">btllib </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a> <a href="https://github.com/bcgsc/btllib/releases/latest"><img src="https://img.shields.io/github/v/release/bcgsc/btllib?label=Release" alt="GitHub release (latest by date)" class="inline"/></a> <a href="https://anaconda.org/bioconda/btllib"><img src="https://img.shields.io/conda/dn/bioconda/btllib?label=Conda%20downloads" alt="Conda" class="inline"/></a> <a href="https://dev.azure.com/bcgsc/btl_public/_build/latest?definitionId=1"><img src="https://dev.azure.com/bcgsc/btl_public/_apis/build/status/bcgsc.btllib" alt="Build Status" class="inline"/></a> <a href="https://doi.org/10.21105/joss.04720"><img src="https://joss.theoj.org/papers/10.21105/joss.04720/status.svg" alt="DOI" style="pointer-events: none;" class="inline"/></a></p>
+<div class="textblock"><p><a class="anchor" id="md_README"></a> <a href="https://github.com/BirolLab/btllib/releases/latest"><img src="https://img.shields.io/github/v/release/BirolLab/btllib?label=Release" alt="GitHub release (latest by date)" class="inline"/></a> <a href="https://anaconda.org/bioconda/btllib"><img src="https://img.shields.io/conda/dn/bioconda/btllib?label=Conda%20downloads" alt="Conda" class="inline"/></a> <a href="https://dev.azure.com/BirolLab/btl_public/_build/latest?definitionId=1"><img src="https://dev.azure.com/BirolLab/btl_public/_apis/build/status/BirolLab.btllib" alt="Build Status" class="inline"/></a> <a href="https://doi.org/10.21105/joss.04720"><img src="https://joss.theoj.org/papers/10.21105/joss.04720/status.svg" alt="DOI" style="pointer-events: none;" class="inline"/></a></p>
 <p><a href="http://www.birollab.ca/">Bioinformatics Technology Lab</a> common code library in C++ with Python wrappers.</p>
 <h2><a class="anchor" id="autotoc_md0"></a>
 Platforms</h2>
@@ -99,7 +99,7 @@ Platforms</h2>
 Installation for users</h2>
 <p>The recommended way is to download using <a href="https://docs.conda.io/en/latest/">Conda</a> package manager: <br  />
  <code>conda install -c bioconda -c conda-forge btllib</code></p>
-<p>Alternatively, you can compile the code from source. Download <code>btllib-$VERSION.tar.gz</code> from the GitHub <a href="https://github.com/bcgsc/btllib/releases/latest">latest release</a> where <code>$VERSION</code> is the latest btllib version and do the following:</p><ul>
+<p>Alternatively, you can compile the code from source. Download <code>btllib-$VERSION.tar.gz</code> from the GitHub <a href="https://github.com/BirolLab/btllib/releases/latest">latest release</a> where <code>$VERSION</code> is the latest btllib version and do the following:</p><ul>
 <li><code>tar xzf btllib-$VERSION.tar.gz</code> to extract the source code.</li>
 <li>Have the dependencies ready:<ul>
 <li>GCC 6+ or Clang 5+ (with OpenMP and C++17 support)</li>
@@ -153,12 +153,12 @@ Using the library</h2>
 </ul>
 <h2><a class="anchor" id="autotoc_md3"></a>
 Documentation</h2>
-<p><a href="https://bcgsc.github.io/btllib/">Docs page</a></p>
+<p><a href="https://birollab.github.io/btllib/">Docs page</a></p>
 <h2><a class="anchor" id="autotoc_md4"></a>
 For btllib developers</h2>
 <ul>
 <li>Initial setup:<ul>
-<li><code>git clone --recurse-submodules <a href="https://github.com/bcgsc/btllib">https://github.com/bcgsc/btllib</a></code> in order to obtain all the code.</li>
+<li><code>git clone --recurse-submodules <a href="https://github.com/BirolLab/btllib">https://github.com/BirolLab/btllib</a></code> in order to obtain all the code.</li>
 <li>In <code>btllib</code> dir, run <code>meson build</code> to create a build directory.</li>
 </ul>
 </li>
@@ -196,9 +196,9 @@ Credits</h2>
 <ul>
 <li>Author: <a href="https://github.com/vlad0x00">Vladimir Nikolic</a></li>
 <li>Components:<ul>
-<li><a href="https://github.com/mohamadi">Hamid Mohamadi</a> and <a href="https://github.com/parham-k">Parham Kazemi</a> for <a href="https://github.com/bcgsc/ntHash">ntHash</a></li>
-<li><a href="https://github.com/JustinChu">Justin Chu</a> for <a href="https://github.com/bcgsc/btl_bloomfilter">MIBloomFilter</a></li>
-<li><a href="https://github.com/jwcodee">Johnathan Wong</a> for <a href="https://github.com/bcgsc/btllib">aaHash</a></li>
+<li><a href="https://github.com/mohamadi">Hamid Mohamadi</a> and <a href="https://github.com/parham-k">Parham Kazemi</a> for <a href="https://github.com/BirolLab/ntHash">ntHash</a></li>
+<li><a href="https://github.com/JustinChu">Justin Chu</a> for <a href="https://github.com/BirolLab/btl_bloomfilter">MIBloomFilter</a></li>
+<li><a href="https://github.com/jwcodee">Johnathan Wong</a> for <a href="https://github.com/BirolLab/btllib">aaHash</a></li>
 </ul>
 </li>
 <li>Included dependencies:<ul>
