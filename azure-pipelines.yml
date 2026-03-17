@@ -38,6 +38,7 @@ jobs:
       export CXXFLAGS="${CXXFLAGS} -std=c++17"
       echo $CXXFLAGS
       meson setup build && cd build && ninja
+      swig -version
     displayName: 'Build the project'
 
   - script: |
