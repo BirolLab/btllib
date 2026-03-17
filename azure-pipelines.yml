@@ -34,12 +34,14 @@ jobs:
   
   - script: |
       source activate btllib_CI
+      echo $CXXFLAGS
       meson setup build && cd build && ninja
     displayName: 'Build the project'
 
   - script: |
       source activate btllib_CI
       set -o errexit -o pipefail
+      echo $CXXFLAGS
       ./compile
       cd examples
       g++ nthash_spacedseeds.cpp -std=c++17 -I../install/include -L../install/lib -lbtllib && ./a.out
@@ -57,6 +59,7 @@ jobs:
 
   - script: |
       source activate btllib_CI
+      echo $CXXFLAGS
       cd build && ninja sanitize-undefined
       if [[ $? -ne 0 ]]; then
         cat __build-sanitize-undefined/meson-logs/testlog.txt
