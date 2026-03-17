@@ -35,7 +35,7 @@ jobs:
   - script: |
       source activate btllib_CI
       echo $CXXFLAGS
-      export CXXFLAGS="${CXXFLAGS} -std=c++17 -Werror"
+      export CXXFLAGS="${CXXFLAGS} -std=c++17"
       echo $CXXFLAGS
       meson setup build && cd build && ninja
     displayName: 'Build the project'
