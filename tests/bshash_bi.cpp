@@ -449,10 +449,10 @@ main()
     TEST_ASSERT_ARRAY_EQ(bshash.hashes(), bshash_rc.hashes(), h);
     TEST_ASSERT_ARRAY_EQ(bshash.hashes(), bshash_rc_no_meth.hashes(), h);
 
-    TEST_ASSERT_EQ(bshash.is_methylated(), bshash_rc.is_methylated());
-    TEST_ASSERT_NE(bshash.is_methylated(), bshash_no_meth.is_methylated());
-    TEST_ASSERT_NE(bshash_rc.is_methylated(),
-                   bshash_rc_no_meth.is_methylated());
+    TEST_ASSERT_EQ(bshash.is_methylated(0), bshash_rc.is_methylated(1));
+    TEST_ASSERT_NE(bshash.is_methylated(0), bshash_no_meth.is_methylated(0));
+    TEST_ASSERT_NE(bshash_rc.is_methylated(1),
+                   bshash_rc_no_meth.is_methylated(1));
     TEST_ASSERT_NE(bshash.is_forward_higher(), bshash_rc.is_forward_higher());
   }
 
