@@ -373,7 +373,7 @@ public:
   bool is_methylated(int offset)
   {
     char base = seq[pos + meth_base_idx + offset];
-    if (flag == 0) {
+    if (offset == 0) {
       return base == 'C' || base == 'c';
     } else {
       return base == 'G' || base == 'g';
