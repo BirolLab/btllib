@@ -40,50 +40,60 @@ using hashing_internals::BS_BI_DIMER_TAB;
 using hashing_internals::BS_BI_TETRAMER_TAB;
 using hashing_internals::BS_BI_TRIMER_TAB;
 
-
-namespace dev{
-inline uint64_t base_forward_hash_BI(const char* seq, unsigned k) {
-    return hashing_internals::base_forward_hash(
-        seq, k,
-        hashing_internals::SEED_TAB,
-        hashing_internals::BS_BI_DIMER_TAB,
-        hashing_internals::BS_BI_TRIMER_TAB,
-        hashing_internals::BS_BI_TETRAMER_TAB,
-        hashing_internals::BS_BI_CONVERT_TAB
-    );
+namespace dev {
+inline uint64_t
+base_forward_hash_BI(const char* seq, unsigned k)
+{
+  return hashing_internals::base_forward_hash(
+    seq,
+    k,
+    hashing_internals::SEED_TAB,
+    hashing_internals::BS_BI_DIMER_TAB,
+    hashing_internals::BS_BI_TRIMER_TAB,
+    hashing_internals::BS_BI_TETRAMER_TAB,
+    hashing_internals::BS_BI_CONVERT_TAB);
 }
 
-inline uint64_t base_reverse_hash_BI(const char* seq, unsigned k) {
-    return hashing_internals::base_reverse_hash(
-        seq, k,
-        hashing_internals::SEED_TAB,
-        hashing_internals::BS_BI_DIMER_TAB,     // Bisulfite RC logic usually shares the dimer tab
-        hashing_internals::BS_BI_TRIMER_TAB,
-        hashing_internals::BS_BI_TETRAMER_TAB,
-        hashing_internals::BS_BI_RC_CONVERT_TAB
-    );
+inline uint64_t
+base_reverse_hash_BI(const char* seq, unsigned k)
+{
+  return hashing_internals::base_reverse_hash(
+    seq,
+    k,
+    hashing_internals::SEED_TAB,
+    hashing_internals::BS_BI_DIMER_TAB, // Bisulfite RC logic usually shares the
+                                        // dimer tab
+    hashing_internals::BS_BI_TRIMER_TAB,
+    hashing_internals::BS_BI_TETRAMER_TAB,
+    hashing_internals::BS_BI_RC_CONVERT_TAB);
 }
-
-
 
 // --- BI (C-to-T) Specialized Rolling Updates ---
 
-inline uint64_t next_forward_hash_BI(uint64_t h, unsigned k, char out, char in) {
-    return hashing_internals::next_forward_hash(
-        h, k, (unsigned char)out, (unsigned char)in,
-        hashing_internals::SEED_TAB,
-        hashing_internals::BS_BI_MS_TAB_33R,
-        hashing_internals::BS_BI_MS_TAB_31L
-    );
+inline uint64_t
+next_forward_hash_BI(uint64_t h, unsigned k, char out, char in)
+{
+  return hashing_internals::next_forward_hash(
+    h,
+    k,
+    (unsigned char)out,
+    (unsigned char)in,
+    hashing_internals::SEED_TAB,
+    hashing_internals::BS_BI_MS_TAB_33R,
+    hashing_internals::BS_BI_MS_TAB_31L);
 }
 
-inline uint64_t next_reverse_hash_BI(uint64_t h, unsigned k, char out, char in) {
-    return hashing_internals::next_reverse_hash(
-        h, k, (unsigned char)out, (unsigned char)in,
-        hashing_internals::SEED_TAB,
-        hashing_internals::BS_BI_MS_TAB_33R,
-        hashing_internals::BS_BI_MS_TAB_31L
-    );
+inline uint64_t
+next_reverse_hash_BI(uint64_t h, unsigned k, char out, char in)
+{
+  return hashing_internals::next_reverse_hash(
+    h,
+    k,
+    (unsigned char)out,
+    (unsigned char)in,
+    hashing_internals::SEED_TAB,
+    hashing_internals::BS_BI_MS_TAB_33R,
+    hashing_internals::BS_BI_MS_TAB_31L);
 }
 
 }
@@ -104,10 +114,10 @@ public:
    * @param pos Position in the sequence to start hashing from
    */
   BsHashBi(const char* seq,
-                    size_t seq_len,
-                    hashing_internals::NUM_HASHES_TYPE num_hashes,
-                    hashing_internals::K_TYPE k,
-                    size_t pos = 0)
+           size_t seq_len,
+           hashing_internals::NUM_HASHES_TYPE num_hashes,
+           hashing_internals::K_TYPE k,
+           size_t pos = 0)
     : seq(seq)
     , seq_len(seq_len)
     , num_hashes(num_hashes)
@@ -129,21 +139,19 @@ public:
 
     size_t num_dimers = k / 2;
     size_t center_dimer_start = (num_dimers / 2) * 2;
-      meth_base_idx = center_dimer_start;
+    meth_base_idx = center_dimer_start;
 
-      primitive_tab = BS_BI_SEED_TAB;
+    primitive_tab = BS_BI_SEED_TAB;
 
-      right_table = BS_BI_MS_TAB_33R;
-      left_table = BS_BI_MS_TAB_31L;
+    right_table = BS_BI_MS_TAB_33R;
+    left_table = BS_BI_MS_TAB_31L;
 
-      convert_tab = BS_BI_CONVERT_TAB;
-      rc_convert_tab = BS_BI_RC_CONVERT_TAB;
+    convert_tab = BS_BI_CONVERT_TAB;
+    rc_convert_tab = BS_BI_RC_CONVERT_TAB;
 
-      dimer_tab = BS_BI_DIMER_TAB;
-      trimer_tab = BS_BI_TRIMER_TAB;
-      tetramer_tab = BS_BI_TETRAMER_TAB;
-
-
+    dimer_tab = BS_BI_DIMER_TAB;
+    trimer_tab = BS_BI_TRIMER_TAB;
+    tetramer_tab = BS_BI_TETRAMER_TAB;
   }
 
   /**
@@ -154,14 +162,10 @@ public:
    * @param pos Position in sequence to start hashing from
    */
   BsHashBi(const std::string& seq,
-                    hashing_internals::NUM_HASHES_TYPE num_hashes,
-                    hashing_internals::K_TYPE k,
-                    size_t pos = 0)
-    : BsHashBi(seq.data(),
-                        seq.size(),
-                        num_hashes,
-                        k,
-                        pos)
+           hashing_internals::NUM_HASHES_TYPE num_hashes,
+           hashing_internals::K_TYPE k,
+           size_t pos = 0)
+    : BsHashBi(seq.data(), seq.size(), num_hashes, k, pos)
   {
   }
 
@@ -337,10 +341,10 @@ public:
     const uint64_t rev = prev_reverse_hash(
       rev_hash, k, char_out, char_in, primitive_tab, right_table, left_table);
     extend_hashes(fwd, rev, k, num_hashes, hash_arr.get());
-    return true;    
+    return true;
   }
 
-    /**
+  /**
    * Extract the central dimer (two-base substring) of the current k-mer window.
    * Since the number of dimers in a k-mer is always odd, the center dimer is
    * unambiguously defined as the (num_dimers / 2)-th dimer from the start.
@@ -369,7 +373,7 @@ public:
   bool is_methylated()
   {
     char base = seq[pos + meth_base_idx];
-      return base == 'C' || base == 'c';
+    return base == 'C' || base == 'c';
   }
 
   /**
