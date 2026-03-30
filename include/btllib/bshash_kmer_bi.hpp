@@ -47,7 +47,7 @@ base_forward_hash_BI(const char* seq, unsigned k)
   return hashing_internals::base_forward_hash(
     seq,
     k,
-    hashing_internals::SEED_TAB,
+    hashing_internals::BS_BI_SEED_TAB,
     hashing_internals::BS_BI_DIMER_TAB,
     hashing_internals::BS_BI_TRIMER_TAB,
     hashing_internals::BS_BI_TETRAMER_TAB,
@@ -60,7 +60,7 @@ base_reverse_hash_BI(const char* seq, unsigned k)
   return hashing_internals::base_reverse_hash(
     seq,
     k,
-    hashing_internals::SEED_TAB,
+    hashing_internals::BS_BI_SEED_TAB,
     hashing_internals::BS_BI_DIMER_TAB, // Bisulfite RC logic usually shares the
                                         // dimer tab
     hashing_internals::BS_BI_TRIMER_TAB,
@@ -78,7 +78,7 @@ next_forward_hash_BI(uint64_t h, unsigned k, char out, char in)
     k,
     (unsigned char)out,
     (unsigned char)in,
-    hashing_internals::SEED_TAB,
+    hashing_internals::BS_BI_SEED_TAB,
     hashing_internals::BS_BI_MS_TAB_33R,
     hashing_internals::BS_BI_MS_TAB_31L);
 }
@@ -91,7 +91,7 @@ next_reverse_hash_BI(uint64_t h, unsigned k, char out, char in)
     k,
     (unsigned char)out,
     (unsigned char)in,
-    hashing_internals::SEED_TAB,
+    hashing_internals::BS_BI_SEED_TAB,
     hashing_internals::BS_BI_MS_TAB_33R,
     hashing_internals::BS_BI_MS_TAB_31L);
 }
