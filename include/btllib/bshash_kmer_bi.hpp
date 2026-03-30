@@ -182,11 +182,8 @@ public:
     , convert_tab(obj.convert_tab)
     , rc_convert_tab(obj.rc_convert_tab)
     , dimer_tab(obj.dimer_tab)
-    , rc_dimer_tab(obj.rc_dimer_tab)
     , trimer_tab(obj.trimer_tab)
-    , rc_trimer_tab(obj.rc_trimer_tab)
     , tetramer_tab(obj.tetramer_tab)
-    , rc_tetramer_tab(obj.rc_tetramer_tab)
   {
     std::memcpy(
       hash_arr.get(), obj.hash_arr.get(), num_hashes * sizeof(uint64_t));
