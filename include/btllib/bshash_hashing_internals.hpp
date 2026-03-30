@@ -151,7 +151,7 @@ const uint64_t XX_N_31L[31] = { SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
                                 SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
                                 SEED_N };
 
-const uint64_t BI_DIMER_TAB[16] = { 14735153221487313921ULL,
+const uint64_t BS_BI_DIMER_TAB[16] = { 14735153221487313921ULL,
                                     0ULL,
                                     0ULL,
                                     3711590852222237694ULL,
@@ -170,7 +170,7 @@ const uint64_t BI_DIMER_TAB[16] = { 14735153221487313921ULL,
 
 };
 
-const uint64_t BI_TRIMER_TAB[64] = { 2535301003092472834ULL,
+const uint64_t BS_BI_TRIMER_TAB[64] = { 2535301003092472834ULL,
                                      0ULL,
                                      0ULL,
                                      15911443070617078781ULL,
@@ -237,7 +237,7 @@ const uint64_t BI_TRIMER_TAB[64] = { 2535301003092472834ULL,
 
 };
 
-const uint64_t BI_TETRAMER_TAB[256] = { 18269653361326642180ULL,
+const uint64_t BS_BI_TETRAMER_TAB[256] = { 18269653361326642180ULL,
                                         0ULL,
                                         0ULL,
                                         177090712382909435ULL,
