@@ -8,16 +8,712 @@
 
 namespace btllib::hashing_internals {
 
-// Group CTConversion XOR pairs (6 seeds → 3 pairs)
+static const uint64_t XX_SEED_N_ = SEED_N;
+
+static const uint64_t BI_SEED_A_ = 0xbbd4bd47a36c3c00;
+static const uint64_t BI_SEED_T_ = 0x442b42b85c93c3ff;
+
+const uint64_t BS_BI_SEED_TAB[ASCII_SIZE] = {
+  XX_SEED_N_, BI_SEED_T_, XX_SEED_N_, BI_SEED_A_,
+  BI_SEED_A_, BI_SEED_A_, XX_SEED_N_, BI_SEED_T_, // 0..7
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 8..15
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 16..23
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 24..31
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 32..39
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 40..47
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 48..55
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 56..63
+  XX_SEED_N_, BI_SEED_A_, XX_SEED_N_, BI_SEED_T_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, BI_SEED_A_, // 64..71
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 72..79
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  BI_SEED_T_, BI_SEED_T_, XX_SEED_N_, XX_SEED_N_, // 80..87
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 88..95
+  XX_SEED_N_, BI_SEED_A_, XX_SEED_N_, BI_SEED_T_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, BI_SEED_A_, // 96..103
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 104..111
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  BI_SEED_T_, BI_SEED_T_, XX_SEED_N_, XX_SEED_N_, // 112..119
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 120..127
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 128..135
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 136..143
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 144..151
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 152..159
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 160..167
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 168..175
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 176..183
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 184..191
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 192..199
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 200..207
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 208..215
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 216..223
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 224..231
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 232..239
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, // 240..247
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
+  XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_ // 248..255
+};
+
+static const uint64_t BI_A_33R[33] = {
+  0x00000001a36c3c00, 0x0000000146d87801, 0x000000008db0f003,
+  0x000000011b61e006, 0x0000000036c3c00d, 0x000000006d87801a,
+  0x00000000db0f0034, 0x00000001b61e0068, 0x000000016c3c00d1,
+  0x00000000d87801a3, 0x00000001b0f00346, 0x0000000161e0068d,
+  0x00000000c3c00d1b, 0x0000000187801a36, 0x000000010f00346d,
+  0x000000001e0068db, 0x000000003c00d1b6, 0x000000007801a36c,
+  0x00000000f00346d8, 0x00000001e0068db0, 0x00000001c00d1b61,
+  0x00000001801a36c3, 0x0000000100346d87, 0x000000000068db0f,
+  0x0000000000d1b61e, 0x0000000001a36c3c, 0x000000000346d878,
+  0x00000000068db0f0, 0x000000000d1b61e0, 0x000000001a36c3c0,
+  0x00000000346d8780, 0x0000000068db0f00, 0x00000000d1b61e00
+};
+
+static const uint64_t BI_A_31L[31] = {
+  0xbbd4bd4600000000, 0x77a97a8e00000000, 0xef52f51c00000000,
+  0xdea5ea3a00000000, 0xbd4bd47600000000, 0x7a97a8ee00000000,
+  0xf52f51dc00000000, 0xea5ea3ba00000000, 0xd4bd477600000000,
+  0xa97a8eee00000000, 0x52f51dde00000000, 0xa5ea3bbc00000000,
+  0x4bd4777a00000000, 0x97a8eef400000000, 0x2f51ddea00000000,
+  0x5ea3bbd400000000, 0xbd4777a800000000, 0x7a8eef5200000000,
+  0xf51ddea400000000, 0xea3bbd4a00000000, 0xd4777a9600000000,
+  0xa8eef52e00000000, 0x51ddea5e00000000, 0xa3bbd4bc00000000,
+  0x4777a97a00000000, 0x8eef52f400000000, 0x1ddea5ea00000000,
+  0x3bbd4bd400000000, 0x777a97a800000000, 0xeef52f5000000000,
+  0xddea5ea200000000
+};
+
+// ===== BI_T =====
+static const uint64_t BI_T_33R[33] = {
+  0x000000005c93c3ff, 0x00000000b92787fe, 0x00000001724f0ffc,
+  0x00000000e49e1ff9, 0x00000001c93c3ff2, 0x0000000192787fe5,
+  0x0000000124f0ffcb, 0x0000000049e1ff97, 0x0000000093c3ff2e,
+  0x000000012787fe5c, 0x000000004f0ffcb9, 0x000000009e1ff972,
+  0x000000013c3ff2e4, 0x00000000787fe5c9, 0x00000000f0ffcb92,
+  0x00000001e1ff9724, 0x00000001c3ff2e49, 0x0000000187fe5c93,
+  0x000000010ffcb927, 0x000000001ff9724f, 0x000000003ff2e49e,
+  0x000000007fe5c93c, 0x00000000ffcb9278, 0x00000001ff9724f0,
+  0x00000001ff2e49e1, 0x00000001fe5c93c3, 0x00000001fcb92787,
+  0x00000001f9724f0f, 0x00000001f2e49e1f, 0x00000001e5c93c3f,
+  0x00000001cb92787f, 0x000000019724f0ff, 0x000000012e49e1ff
+};
+
+static const uint64_t BI_T_31L[31] = {
+  0x442b42b800000000, 0x8856857000000000, 0x10ad0ae200000000,
+  0x215a15c400000000, 0x42b42b8800000000, 0x8568571000000000,
+  0xad0ae2200000000,  0x15a15c4400000000, 0x2b42b88800000000,
+  0x5685711000000000, 0xad0ae22000000000, 0x5a15c44200000000,
+  0xb42b888400000000, 0x6857110a00000000, 0xd0ae221400000000,
+  0xa15c442a00000000, 0x42b8885600000000, 0x857110ac00000000,
+  0xae2215a00000000,  0x15c442b400000000, 0x2b88856800000000,
+  0x57110ad000000000, 0xae2215a000000000, 0x5c442b4200000000,
+  0xb888568400000000, 0x7110ad0a00000000, 0xe2215a1400000000,
+  0xc442b42a00000000, 0x8885685600000000, 0x110ad0ae00000000,
+  0x2215a15c00000000
+};
+
+const uint64_t XX_N_33R[33] = { SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
+                                SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
+                                SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
+                                SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
+                                SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
+                                SEED_N, SEED_N, SEED_N };
+
+const uint64_t XX_N_31L[31] = { SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
+                                SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
+                                SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
+                                SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
+                                SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
+                                SEED_N };
+
+const uint64_t BI_DIMER_TAB[16] = { 14735153221487313921ULL,
+                                    0ULL,
+                                    0ULL,
+                                    3711590852222237694ULL,
+                                    0ULL,
+                                    0ULL,
+                                    0ULL,
+                                    0ULL,
+                                    0ULL,
+                                    0ULL,
+                                    0ULL,
+                                    0ULL,
+                                    3711590852222237694ULL,
+                                    0ULL,
+                                    0ULL,
+                                    14735153221487313921ULL
+
+};
+
+const uint64_t BI_TRIMER_TAB[64] = { 2535301003092472834ULL,
+                                     0ULL,
+                                     0ULL,
+                                     15911443070617078781ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     15911443070617078781ULL,
+                                     0ULL,
+                                     0ULL,
+                                     2535301003092472834ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     15911443070617078781ULL,
+                                     0ULL,
+                                     0ULL,
+                                     2535301003092472834ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     0ULL,
+                                     2535301003092472834ULL,
+                                     0ULL,
+                                     0ULL,
+                                     15911443070617078781ULL
+
+};
+
+const uint64_t BI_TETRAMER_TAB[256] = { 18269653361326642180ULL,
+                                        0ULL,
+                                        0ULL,
+                                        177090712382909435ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        177090712382909435ULL,
+                                        0ULL,
+                                        0ULL,
+                                        18269653361326642180ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        177090712382909435ULL,
+                                        0ULL,
+                                        0ULL,
+                                        18269653361326642180ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        18269653361326642180ULL,
+                                        0ULL,
+                                        0ULL,
+                                        177090712382909435ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        177090712382909435ULL,
+                                        0ULL,
+                                        0ULL,
+                                        18269653361326642180ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        18269653361326642180ULL,
+                                        0ULL,
+                                        0ULL,
+                                        177090712382909435ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        18269653361326642180ULL,
+                                        0ULL,
+                                        0ULL,
+                                        177090712382909435ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        0ULL,
+                                        177090712382909435ULL,
+                                        0ULL,
+                                        0ULL,
+                                        18269653361326642180ULL
+
+};
+
+const uint64_t* const BS_BI_MS_TAB_33R[ASCII_SIZE] = {
+  XX_N_33R, BI_T_33R, XX_N_33R, BI_A_33R,
+  BI_A_33R, BI_A_33R, XX_N_33R, BI_T_33R, // 0..7
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 8..15
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 16..23
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 24..31
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 32..39
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 40..47
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 48..55
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 56..63
+  XX_N_33R, BI_A_33R, XX_N_33R, BI_T_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, BI_A_33R, // 64..71
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 72..79
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  BI_T_33R, BI_T_33R, XX_N_33R, XX_N_33R, // 80..87
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 88..95
+  XX_N_33R, BI_A_33R, XX_N_33R, BI_T_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, BI_A_33R, // 96..103
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 104..111
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  BI_T_33R, BI_T_33R, XX_N_33R, XX_N_33R, // 112..119
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 120..127
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 128..135
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 136..143
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 144..151
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 152..159
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 160..167
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 168..175
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 176..183
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 184..191
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 192..199
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 200..207
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 208..215
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 216..223
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 224..231
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 232..239
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R, // 240..247
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
+  XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R // 248..255
+};
+
+const uint64_t* const BS_BI_MS_TAB_31L[ASCII_SIZE] = {
+  XX_N_31L, BI_T_31L, XX_N_31L, BI_A_31L,
+  BI_A_31L, BI_A_31L, XX_N_31L, BI_T_31L, // 0..7
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 8..15
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 16..23
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 24..31
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 32..39
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 40..47
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 48..55
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 56..63
+  XX_N_31L, BI_A_31L, XX_N_31L, BI_T_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, BI_A_31L, // 64..71
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 72..79
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  BI_T_31L, BI_T_31L, XX_N_31L, XX_N_31L, // 80..87
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 88..95
+  XX_N_31L, BI_A_31L, XX_N_31L, BI_T_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, BI_A_31L, // 96..103
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 104..111
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  BI_T_31L, BI_T_31L, XX_N_31L, XX_N_31L, // 112..119
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 120..127
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 128..135
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 136..143
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 144..151
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 152..159
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 160..167
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 168..175
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 176..183
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 184..191
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 192..199
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 200..207
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 208..215
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 216..223
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 224..231
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 232..239
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L, // 240..247
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
+  XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L // 248..255
+};
+
+const uint8_t BS_BI_CONVERT_TAB[ASCII_SIZE] = {
+  255, 255, 255, 255, 255, 255, 255, 255, // 0..7
+  255, 255, 255, 255, 255, 255, 255, 255, // 8..15
+  255, 255, 255, 255, 255, 255, 255, 255, // 16..23
+  255, 255, 255, 255, 255, 255, 255, 255, // 24..31
+  255, 255, 255, 255, 255, 255, 255, 255, // 32..39
+  255, 255, 255, 255, 255, 255, 255, 255, // 40..47
+  255, 255, 255, 255, 255, 255, 255, 255, // 48..55
+  255, 255, 255, 255, 255, 255, 255, 255, // 56..63
+  255, 0,   255, 3,   255, 255, 255, 0,   // 64..71
+  255, 255, 255, 255, 255, 255, 255, 255, // 72..79
+  255, 255, 255, 255, 3,   3,   255, 255, // 80..87
+  255, 255, 255, 255, 255, 255, 255, 255, // 88..95
+  255, 0,   255, 3,   255, 255, 255, 0,   // 96..103
+  255, 255, 255, 255, 255, 255, 255, 255, // 104..111
+  255, 255, 255, 255, 3,   3,   255, 255, // 112..119
+  255, 255, 255, 255, 255, 255, 255, 255, // 120..127
+  255, 255, 255, 255, 255, 255, 255, 255, // 128..135
+  255, 255, 255, 255, 255, 255, 255, 255, // 136..143
+  255, 255, 255, 255, 255, 255, 255, 255, // 144..151
+  255, 255, 255, 255, 255, 255, 255, 255, // 152..159
+  255, 255, 255, 255, 255, 255, 255, 255, // 160..167
+  255, 255, 255, 255, 255, 255, 255, 255, // 168..175
+  255, 255, 255, 255, 255, 255, 255, 255, // 176..183
+  255, 255, 255, 255, 255, 255, 255, 255, // 184..191
+  255, 255, 255, 255, 255, 255, 255, 255, // 192..199
+  255, 255, 255, 255, 255, 255, 255, 255, // 200..207
+  255, 255, 255, 255, 255, 255, 255, 255, // 208..215
+  255, 255, 255, 255, 255, 255, 255, 255, // 216..223
+  255, 255, 255, 255, 255, 255, 255, 255, // 224..231
+  255, 255, 255, 255, 255, 255, 255, 255, // 232..239
+  255, 255, 255, 255, 255, 255, 255, 255, // 240..247
+  255, 255, 255, 255, 255, 255, 255, 255  // 248..255
+};
+
+const uint8_t BS_BI_RC_CONVERT_TAB[ASCII_SIZE] = {
+  255, 255, 255, 255, 255, 255, 255, 255, // 0..7
+  255, 255, 255, 255, 255, 255, 255, 255, // 8..15
+  255, 255, 255, 255, 255, 255, 255, 255, // 16..23
+  255, 255, 255, 255, 255, 255, 255, 255, // 24..31
+  255, 255, 255, 255, 255, 255, 255, 255, // 32..39
+  255, 255, 255, 255, 255, 255, 255, 255, // 40..47
+  255, 255, 255, 255, 255, 255, 255, 255, // 48..55
+  255, 255, 255, 255, 255, 255, 255, 255, // 56..63
+  255, 3,   255, 0,   255, 255, 255, 3,   // 64..71
+  255, 255, 255, 255, 255, 255, 255, 255, // 72..79
+  255, 255, 255, 255, 0,   0,   255, 255, // 80..87
+  255, 255, 255, 255, 255, 255, 255, 255, // 88..95
+  255, 3,   255, 0,   255, 255, 255, 3,   // 96..103
+  255, 255, 255, 255, 255, 255, 255, 255, // 104..111
+  255, 255, 255, 255, 0,   0,   255, 255, // 112..119
+  255, 255, 255, 255, 255, 255, 255, 255, // 120..127
+  255, 255, 255, 255, 255, 255, 255, 255, // 128..135
+  255, 255, 255, 255, 255, 255, 255, 255, // 136..143
+  255, 255, 255, 255, 255, 255, 255, 255, // 144..151
+  255, 255, 255, 255, 255, 255, 255, 255, // 152..159
+  255, 255, 255, 255, 255, 255, 255, 255, // 160..167
+  255, 255, 255, 255, 255, 255, 255, 255, // 168..175
+  255, 255, 255, 255, 255, 255, 255, 255, // 176..183
+  255, 255, 255, 255, 255, 255, 255, 255, // 184..191
+  255, 255, 255, 255, 255, 255, 255, 255, // 192..199
+  255, 255, 255, 255, 255, 255, 255, 255, // 200..207
+  255, 255, 255, 255, 255, 255, 255, 255, // 208..215
+  255, 255, 255, 255, 255, 255, 255, 255, // 216..223
+  255, 255, 255, 255, 255, 255, 255, 255, // 224..231
+  255, 255, 255, 255, 255, 255, 255, 255, // 232..239
+  255, 255, 255, 255, 255, 255, 255, 255, // 240..247
+  255, 255, 255, 255, 255, 255, 255, 255  // 248..255
+};
+
+// Group CTConversion XOR pairs (6 SEEDs → 3 pairs)
 static const uint64_t CT_SEED_A_ = 0x38e1680db3188ddfULL; // 0
 static const uint64_t CT_SEED_G_ = 0x07d6453133a367b1ULL; // 2
 static const uint64_t CT_SEED_CT = 0x2c555d4ed6a221a1ULL; // 3
-static const uint64_t XX_SEED_N_ = SEED_N;                // 3
+                                                          // 3
 
-// Group GAConversion XOR pairs (6 seeds → 3 pairs)
+// Group GAConversion XOR pairs (6 SEEDs → 3 pairs)
 static const uint64_t GA_SEED_GA = 0x4d9c9d29392bb7d6ULL; // 0
 static const uint64_t GA_SEED_C_ = 0x0e06d727c6e35043ULL; // 1
 static const uint64_t GA_SEED_T_ = 0x013a8fe8dea57b07ULL; // 3
+inline const std::unordered_set<std::string> VALID_MODES = { "CG",
+                                                             "CC",
+                                                             "CT",
+                                                             "CA" };
 
 const uint64_t BS_CT_SEED_TAB[ASCII_SIZE] = {
   XX_SEED_N_, GA_SEED_T_, XX_SEED_N_, GA_SEED_GA,
@@ -1017,21 +1713,6 @@ static const uint64_t GA_T_31L[31] = {
   0x9d47f400000000
 };
 
-// TODO see if alias works
-const uint64_t XX_N_33R[33] = { SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
-                                SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
-                                SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
-                                SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
-                                SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
-                                SEED_N, SEED_N, SEED_N };
-
-const uint64_t XX_N_31L[31] = { SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
-                                SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
-                                SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
-                                SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
-                                SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
-                                SEED_N };
-
 const uint64_t* const BS_CT_MS_TAB_33R[ASCII_SIZE] = {
   XX_N_33R, GA_T_33R, XX_N_33R, GA_GA33R,
   GA_GA33R, GA_GA33R, XX_N_33R, GA_C_33R, // 0..7
@@ -1458,7 +2139,7 @@ constexpr uint8_t BS_RC_CONVERT_TAB[128] = {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-// Group CG XOR pairs (18 seeds → 9 pairs)
+// Group CG XOR pairs (18 SEEDs → 9 pairs)
 static const uint64_t CG_group1 = 0x85447b35f730b24eULL;
 static const uint64_t CG_group2 = 0x1e7ec42ae67bf290ULL;
 static const uint64_t CG_group3 = 0xe630f41524612363ULL;
@@ -1469,14 +2150,14 @@ static const uint64_t CG_group7 = 0xed73b07d7795d703ULL;
 static const uint64_t CG_group8 = 0xc05a70c787ddc030ULL;
 static const uint64_t CG_group9 = 0xb3e7ea1d5f69e07dULL;
 
-// Group CC XOR pairs (10 seeds → 5 pairs)
+// Group CC XOR pairs (10 SEEDs → 5 pairs)
 static const uint64_t CC_group1 = 0x35186b8fc962b995ULL;
 static const uint64_t CC_group2 = 0xeeecbd3086db4364ULL;
 static const uint64_t CC_group3 = 0x15dc1dfcf2d821d7ULL;
 static const uint64_t CC_group4 = 0x501734bd0947b87dULL;
 static const uint64_t CC_group5 = 0xda7b6ec0c3c8457aULL;
 
-// Group CA XOR pairs (18 seeds → 9 pairs)
+// Group CA XOR pairs (18 SEEDs → 9 pairs)
 static const uint64_t CA_group1 = 0xd2e69a6245391840ULL;
 static const uint64_t CA_group2 = 0xfcdf37536278deafULL;
 static const uint64_t CA_group3 = 0x72e4656f024fd310ULL;
@@ -1487,7 +2168,7 @@ static const uint64_t CA_group7 = 0x23f706d477652a44ULL;
 static const uint64_t CA_group8 = 0x3fd2c4487b9f6d6cULL;
 static const uint64_t CA_group9 = 0xa8a3d2ed1139ceeaULL;
 
-// Group CT XOR pairs (18 seeds → 9 pairs)
+// Group CT XOR pairs (18 SEEDs → 9 pairs)
 static const uint64_t CT_group1 = 0x385ed2689c215294ULL;
 static const uint64_t CT_group2 = 0x5997dfab383a421eULL;
 static const uint64_t CT_group3 = 0x2c62c0516c643607ULL;

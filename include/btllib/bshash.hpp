@@ -10,6 +10,7 @@
 #include <vector>
 
 #include <btllib/bshash_kmer.hpp>
+#include <btllib/bshash_kmer_bi.hpp>
 #include <btllib/bshash_kmer_directional.hpp>
 #include <btllib/hashing_internals.hpp>
 #include <btllib/status.hpp>
