@@ -370,10 +370,14 @@ public:
    * false otherwise.
    */
 
-  bool is_methylated()
+  bool is_methylated(int offset)
   {
-    char base = seq[pos + meth_base_idx];
-    return base == 'C' || base == 'c';
+    char base = seq[pos + meth_base_idx + offset];
+    if (flag == 0) {
+      return base == 'C' || base == 'c';
+    } else {
+      return base == 'G' || base == 'g';
+    }
   }
 
   /**
