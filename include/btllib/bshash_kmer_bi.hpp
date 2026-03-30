@@ -156,7 +156,6 @@ public:
   BsHashBi(const std::string& seq,
                     hashing_internals::NUM_HASHES_TYPE num_hashes,
                     hashing_internals::K_TYPE k,
-                    std::string conversion_type,
                     size_t pos = 0)
     : BsHashBi(seq.data(),
                         seq.size(),
