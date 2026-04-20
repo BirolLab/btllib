@@ -40,64 +40,6 @@ using hashing_internals::BS_BI_DIMER_TAB;
 using hashing_internals::BS_BI_TETRAMER_TAB;
 using hashing_internals::BS_BI_TRIMER_TAB;
 
-namespace dev {
-inline uint64_t
-base_forward_hash_BI(const char* seq, unsigned k)
-{
-  return hashing_internals::base_forward_hash(
-    seq,
-    k,
-    hashing_internals::BS_BI_SEED_TAB,
-    hashing_internals::BS_BI_DIMER_TAB,
-    hashing_internals::BS_BI_TRIMER_TAB,
-    hashing_internals::BS_BI_TETRAMER_TAB,
-    hashing_internals::BS_BI_CONVERT_TAB);
-}
-
-inline uint64_t
-base_reverse_hash_BI(const char* seq, unsigned k)
-{
-  return hashing_internals::base_reverse_hash(
-    seq,
-    k,
-    hashing_internals::BS_BI_SEED_TAB,
-    hashing_internals::BS_BI_DIMER_TAB, // Bisulfite RC logic usually shares the
-                                        // dimer tab
-    hashing_internals::BS_BI_TRIMER_TAB,
-    hashing_internals::BS_BI_TETRAMER_TAB,
-    hashing_internals::BS_BI_RC_CONVERT_TAB);
-}
-
-// --- BI (C-to-T) Specialized Rolling Updates ---
-
-inline uint64_t
-next_forward_hash_BI(uint64_t h, unsigned k, char out, char in)
-{
-  return hashing_internals::next_forward_hash(
-    h,
-    k,
-    (unsigned char)out,
-    (unsigned char)in,
-    hashing_internals::BS_BI_SEED_TAB,
-    hashing_internals::BS_BI_MS_TAB_33R,
-    hashing_internals::BS_BI_MS_TAB_31L);
-}
-
-inline uint64_t
-next_reverse_hash_BI(uint64_t h, unsigned k, char out, char in)
-{
-  return hashing_internals::next_reverse_hash(
-    h,
-    k,
-    (unsigned char)out,
-    (unsigned char)in,
-    hashing_internals::BS_BI_SEED_TAB,
-    hashing_internals::BS_BI_MS_TAB_33R,
-    hashing_internals::BS_BI_MS_TAB_31L);
-}
-
-}
-
 /**
  * Bi BS-seq k-mer hashing.
  */
