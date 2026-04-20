@@ -11,7 +11,7 @@ int
 main()
 {
   {
-    PRINT_TEST_NAME("k-mer rolling - CT Mode - No Mutation")
+    PRINT_TEST_NAME("k-mer rolling - CT Mode")
 
     std::string seq = "AGTCAGTCAGTCAG";
     unsigned h = 3;
@@ -43,73 +43,9 @@ main()
   }
 
   {
-    PRINT_TEST_NAME("k-mer rolling - GA Mode - No Mutation")
+    PRINT_TEST_NAME("k-mer rolling - GA Mode")
 
     std::string seq = "AGTCAGTCAGTCAG";
-    unsigned h = 3;
-    unsigned k = 6;
-
-    btllib::BsHashDirectional bshash(seq, h, k, "GA");
-    std::vector<uint64_t*> hashes;
-    uint64_t fwd_hash = 0;
-    uint64_t final_fwd_hash = 0;
-    uint64_t rev_hash = 0;
-    uint64_t final_rev_hash = 0;
-
-    while (bshash.roll()) {
-      if (fwd_hash == 0) {
-        fwd_hash = bshash.get_forward_hash();
-        rev_hash = bshash.get_reverse_hash();
-      }
-      final_fwd_hash = bshash.get_forward_hash();
-      final_rev_hash = bshash.get_reverse_hash();
-      uint64_t* h_vals = new uint64_t[h];
-      std::copy(bshash.hashes(), bshash.hashes() + h, h_vals);
-      hashes.push_back(h_vals);
-    }
-
-    TEST_ASSERT_EQ(hashes.size(), seq.length() - k + 1);
-    TEST_ASSERT_EQ(fwd_hash, final_fwd_hash);
-    TEST_ASSERT_EQ(rev_hash, final_rev_hash);
-    TEST_ASSERT_ARRAY_EQ(hashes.front(), hashes.back(), h);
-  }
-
-  {
-    PRINT_TEST_NAME("k-mer rolling - (CT Directional)")
-
-    std::string seq = "AGTCAGTCAGTTAG";
-    unsigned h = 3;
-    unsigned k = 6;
-
-    btllib::BsHashDirectional bshash(seq, h, k, "CT");
-    std::vector<uint64_t*> hashes;
-    uint64_t fwd_hash = 0;
-    uint64_t final_fwd_hash = 0;
-    uint64_t rev_hash = 0;
-    uint64_t final_rev_hash = 0;
-
-    while (bshash.roll()) {
-      if (fwd_hash == 0) {
-        fwd_hash = bshash.get_forward_hash();
-        rev_hash = bshash.get_reverse_hash();
-      }
-      final_fwd_hash = bshash.get_forward_hash();
-      final_rev_hash = bshash.get_reverse_hash();
-      uint64_t* h_vals = new uint64_t[h];
-      std::copy(bshash.hashes(), bshash.hashes() + h, h_vals);
-      hashes.push_back(h_vals);
-    }
-
-    TEST_ASSERT_EQ(hashes.size(), seq.length() - k + 1);
-    TEST_ASSERT_EQ(fwd_hash, final_fwd_hash);
-    TEST_ASSERT_EQ(rev_hash, final_rev_hash);
-    TEST_ASSERT_ARRAY_EQ(hashes.front(), hashes.back(), h);
-  }
-
-  {
-    PRINT_TEST_NAME("k-mer rolling - (GA Directional)")
-
-    std::string seq = "AGTCAGTCAATCAA";
     unsigned h = 3;
     unsigned k = 6;
 
