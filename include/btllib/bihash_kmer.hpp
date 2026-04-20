@@ -11,7 +11,7 @@
 #include <unordered_set>
 #include <vector>
 
-#include <btllib/bshash_hashing_internals.hpp>
+#include <btllib/bihash_hashing_internals.hpp>
 #include <btllib/status.hpp>
 
 namespace btllib {
@@ -20,16 +20,16 @@ using hashing_internals::extend_hashes;
 using hashing_internals::srol;
 using hashing_internals::sror;
 
-using hashing_internals::base_forward_bs_hash;
-using hashing_internals::next_forward_bs_hash;
-using hashing_internals::prev_forward_bs_hash;
+using hashing_internals::base_forward_bi_hash;
+using hashing_internals::next_forward_bi_hash;
+using hashing_internals::prev_forward_bi_hash;
 
-using hashing_internals::base_reverse_bs_hash;
-using hashing_internals::next_reverse_bs_hash;
-using hashing_internals::prev_reverse_bs_hash;
+using hashing_internals::base_reverse_bi_hash;
+using hashing_internals::next_reverse_bi_hash;
+using hashing_internals::prev_reverse_bi_hash;
 
-using hashing_internals::BS_CONVERT_TAB;
-using hashing_internals::BS_RC_CONVERT_TAB;
+using hashing_internals::BI_CONVERT_TAB;
+using hashing_internals::BI_RC_CONVERT_TAB;
 
 using hashing_internals::CA_DIMER_TAB;
 using hashing_internals::CC_DIMER_TAB;
@@ -45,12 +45,12 @@ using hashing_internals::MS_TAB_33R_CC;
 using hashing_internals::MS_TAB_33R_CG;
 using hashing_internals::MS_TAB_33R_CT;
 
-class BsHash
+class BiHash
 {
 
 public:
   /**
-   * Construct an BsHash object for k-mers.
+   * Construct an BiHash object for k-mers.
    * @param seq C-string containing sequence data
    * @param seq_len Length of the sequence
    * @param num_hashes Number of hashes to generate per k-mer
@@ -59,12 +59,12 @@ public:
    *              Supported values are "CG", "CC", "CT", and "CA". Each mode
    *              applies the corresponding bisulfite-oriented hashing behavior.
    *
-   *              Note: BsHash can only handle one methylation context at a
-   * time. For multi-context bisulfite processing, use BsHashDirectional, which
+   *              Note: BiHash can only handle one methylation context at a
+   * time. For multi-context bisulfite processing, use BiHashDirectional, which
    * performs the additional required handling.
    * @param pos Position in the sequence to start hashing from
    */
-  BsHash(const char* seq,
+  BiHash(const char* seq,
          size_t seq_len,
          hashing_internals::NUM_HASHES_TYPE num_hashes,
          hashing_internals::K_TYPE k,
@@ -78,21 +78,21 @@ public:
     , initialized(false)
     , hash_arr(new uint64_t[num_hashes])
   {
-    check_error(k == 0, "BsHash: k must be greater than 0");
-    check_error(k % 2 == 1, "BsHash: k must be even");
-    check_error((k / 2) % 2 == 0, "BsHash: k must have odd number of dimers");
+    check_error(k == 0, "BiHash: k must be greater than 0");
+    check_error(k % 2 == 1, "BiHash: k must be even");
+    check_error((k / 2) % 2 == 0, "BiHash: k must have odd number of dimers");
     check_error(this->seq_len < k,
-                "BsHash: sequence length (" + std::to_string(this->seq_len) +
+                "BiHash: sequence length (" + std::to_string(this->seq_len) +
                   ") is smaller than k (" + std::to_string(k) + ")");
     check_error(pos > this->seq_len - k,
-                "BsHash: passed position (" + std::to_string(pos) +
+                "BiHash: passed position (" + std::to_string(pos) +
                   ") is larger than sequence length (" +
                   std::to_string(this->seq_len) + ")");
     static const std::unordered_set<std::string> valid_modes = {
       "CG", "CC", "CT", "CA"
     };
     check_error(valid_modes.find(mode) == valid_modes.end(),
-                "BsHash: mode must be one of [CG, CC, CT, CA], but got '" +
+                "BiHash: mode must be one of [CG, CC, CT, CA], but got '" +
                   mode + "'");
 
     if (mode == "CC") {
@@ -119,7 +119,7 @@ public:
   }
 
   /**
-   * Construct an BsHash object for k-mers.
+   * Construct an BiHash object for k-mers.
    * @param seq Sequence string
    * @param num_hashes Number of hashes to produce per k-mer
    * @param k K-mer size
@@ -127,21 +127,21 @@ public:
    *              Supported values are "CG", "CC", "CT", and "CA". Each mode
    *              applies the corresponding bisulfite-oriented hashing behavior.
    *
-   *              Note: BsHash can only handle one methylation context at a
-   * time. For multi-context bisulfite processing, use BsHashDirectional, which
+   *              Note: BiHash can only handle one methylation context at a
+   * time. For multi-context bisulfite processing, use BiHashDirectional, which
    * performs the additional required handling.
    * @param pos Position in sequence to start hashing from
    */
-  BsHash(const std::string& seq,
+  BiHash(const std::string& seq,
          hashing_internals::NUM_HASHES_TYPE num_hashes,
          hashing_internals::K_TYPE k,
          std::string mode = "CG",
          size_t pos = 0)
-    : BsHash(seq.data(), seq.size(), num_hashes, k, mode, pos)
+    : BiHash(seq.data(), seq.size(), num_hashes, k, mode, pos)
   {
   }
 
-  BsHash(const BsHash& obj)
+  BiHash(const BiHash& obj)
     : seq(obj.seq)
     , seq_len(obj.seq_len)
     , num_hashes(obj.num_hashes)
@@ -159,16 +159,16 @@ public:
       hash_arr.get(), obj.hash_arr.get(), num_hashes * sizeof(uint64_t));
   }
 
-  BsHash(BsHash&&) = default;
+  BiHash(BiHash&&) = default;
 
   /**
    * Calculate the hash values of current k-mer and advance to the next k-mer.
-   * BsHash advances one nucleotide at a time until it finds a k-mer with valid
+   * BiHash advances one nucleotide at a time until it finds a k-mer with valid
    * characters (ACGTU) and skips over those with invalid characters (non-ACGTU,
    * including N). This method must be called before hashes() is accessed, for
-   * the first and every subsequent hashed kmer. get_pos() may be called at any
+   * the first and every subiequent hashed kmer. get_pos() may be called at any
    * time to obtain the position of last hashed k-mer or the k-mer to be hashed
-   * if roll() has never been called on this BsHash object. It is important to
+   * if roll() has never been called on this BiHash object. It is important to
    * note that the number of roll() calls is NOT necessarily equal to get_pos(),
    * if there are N's or invalid characters in the hashed sequence.
    * @return \p true on success and \p false otherwise
@@ -184,8 +184,8 @@ public:
         return false;
       char c1 = seq[p];
       char c2 = seq[p + 1];
-      uint8_t a = BS_CONVERT_TAB[(unsigned char)c1];
-      uint8_t b = BS_CONVERT_TAB[(unsigned char)c2];
+      uint8_t a = BI_CONVERT_TAB[(unsigned char)c1];
+      uint8_t b = BI_CONVERT_TAB[(unsigned char)c2];
       uint8_t loc = 10 * a + b;
       return DIMER_TAB[loc] != 0;
     };
@@ -225,10 +225,10 @@ public:
         char in1 = seq[pos + k + i - 1];
         char in2 = seq[pos + k + i + 1 - 1];
 
-        fwd_hashes[i] = next_forward_bs_hash(
+        fwd_hashes[i] = next_forward_bi_hash(
           fwd_hashes[i], k, out1, out2, in1, in2, DIMER_TAB, TAB_33R, TAB_31L);
 
-        rev_hashes[i] = next_reverse_bs_hash(
+        rev_hashes[i] = next_reverse_bi_hash(
           rev_hashes[i], k, out1, out2, in1, in2, DIMER_TAB, TAB_33R, TAB_31L);
       }
     }
@@ -247,7 +247,7 @@ public:
   }
 
   /**
-   * Extract the central dimer (two-base substring) of the current k-mer window.
+   * Extract the central dimer (two-base subitring) of the current k-mer window.
    * Since the number of dimers in a k-mer is always odd, the center dimer is
    * unambiguously defined as the (num_dimers / 2)-th dimer from the start.
    *
@@ -313,8 +313,8 @@ public:
     auto dimer_valid = [&](size_t p) -> bool {
       if (p + 1 >= seq_len)
         return false;
-      uint8_t a = BS_CONVERT_TAB[(unsigned char)seq[p]];
-      uint8_t b = BS_CONVERT_TAB[(unsigned char)seq[p + 1]];
+      uint8_t a = BI_CONVERT_TAB[(unsigned char)seq[p]];
+      uint8_t b = BI_CONVERT_TAB[(unsigned char)seq[p + 1]];
       uint8_t loc = 10 * a + b;
       return DIMER_TAB[loc] != 0;
     };
@@ -363,10 +363,10 @@ public:
         char in1 = seq[pos - 2 + i];
         char in2 = seq[pos - 1 + i];
 
-        fwd_hashes[i] = prev_forward_bs_hash(
+        fwd_hashes[i] = prev_forward_bi_hash(
           fwd_hashes[i], k, out1, out2, in1, in2, DIMER_TAB, TAB_33R, TAB_31L);
 
-        rev_hashes[i] = prev_reverse_bs_hash(
+        rev_hashes[i] = prev_reverse_bi_hash(
           rev_hashes[i], k, out1, out2, in1, in2, DIMER_TAB, TAB_33R, TAB_31L);
       }
     }
@@ -386,7 +386,7 @@ public:
 
   /**
    * Get the position of last hashed k-mer or the k-mer to be hashed if roll()
-   * has never been called on this BsHash object.
+   * has never been called on this BiHash object.
    * @return Position of the most recently hashed k-mer's first base-pair
    */
   size_t get_pos() const { return pos; }
@@ -460,8 +460,8 @@ private:
       for (unsigned i = 0; i < k && pos <= seq_len - k + 1; i += 2) {
         const char c1 = seq[pos + k - i - 2];
         const char c2 = seq[pos + k - i - 1];
-        const uint8_t a = BS_CONVERT_TAB[(unsigned char)c1];
-        const uint8_t b = BS_CONVERT_TAB[(unsigned char)c2];
+        const uint8_t a = BI_CONVERT_TAB[(unsigned char)c1];
+        const uint8_t b = BI_CONVERT_TAB[(unsigned char)c2];
         const uint8_t loc = 10 * a + b;
 
         if (DIMER_TAB[loc] == 0) {
@@ -485,8 +485,8 @@ private:
         return false;
       char c1 = seq[p];
       char c2 = seq[p + 1];
-      uint8_t a = BS_CONVERT_TAB[(unsigned char)c1];
-      uint8_t b = BS_CONVERT_TAB[(unsigned char)c2];
+      uint8_t a = BI_CONVERT_TAB[(unsigned char)c1];
+      uint8_t b = BI_CONVERT_TAB[(unsigned char)c2];
       uint8_t loc = 10 * a + b;
       return DIMER_TAB[loc] != 0;
     };
@@ -495,8 +495,8 @@ private:
       has_second = false;
     }
 
-    fwd_hashes = base_forward_bs_hash(seq + pos, has_second, k, DIMER_TAB);
-    rev_hashes = base_reverse_bs_hash(seq + pos, has_second, k, DIMER_TAB);
+    fwd_hashes = base_forward_bi_hash(seq + pos, has_second, k, DIMER_TAB);
+    rev_hashes = base_reverse_bi_hash(seq + pos, has_second, k, DIMER_TAB);
 
     extend_hashes(fwd_hashes[0], rev_hashes[0], k, num_hashes, hash_arr.get());
 

@@ -9,9 +9,9 @@
 #include <string_view>
 #include <vector>
 
-#include <btllib/bshash_kmer.hpp>
-#include <btllib/bshash_kmer_bi.hpp>
-#include <btllib/bshash_kmer_directional.hpp>
+#include <btllib/bihash_kmer.hpp>
+#include <btllib/bihash_kmer_bi.hpp>
+#include <btllib/bihash_kmer_directional.hpp>
 #include <btllib/hashing_internals.hpp>
 #include <btllib/status.hpp>
 
@@ -22,6 +22,6 @@ namespace btllib {
  * are different from the previous version. Useful for tracking differences in
  * saved hashes, e.g., in Bloom filters.
  */
-static const char* const BSHASH_FN_NAME = "bsHash_v1";
+static const char* const BIHASH_FN_NAME = "biHash_v1";
 
 } // namespace btllib
