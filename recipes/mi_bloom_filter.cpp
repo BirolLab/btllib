@@ -214,6 +214,7 @@ main(int argc, char* argv[])
     }
     if (verbose) {
       std::cout << "verbose" << std::endl;
+      std::cout << "Thread count: " << thread_count << std::endl;
     }
 
     const std::vector<std::string> read_paths(&argv[optind], &argv[argc]);
