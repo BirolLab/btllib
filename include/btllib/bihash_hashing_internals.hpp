@@ -13,7 +13,7 @@ static const uint64_t XX_SEED_N_ = SEED_N;
 static const uint64_t BI_SEED_A_ = 0x6a8c7aa7db953866ULL;
 static const uint64_t BI_SEED_T_ = 0x320d1bb2e76ae9f2ULL;
 
-const uint64_t BS_BI_SEED_TAB[ASCII_SIZE] = {
+const uint64_t BI_BI_SEED_TAB[ASCII_SIZE] = {
   XX_SEED_N_, BI_SEED_T_, XX_SEED_N_, BI_SEED_A_,
   BI_SEED_A_, BI_SEED_A_, XX_SEED_N_, BI_SEED_T_, // 0..7
   XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
@@ -151,7 +151,7 @@ const uint64_t XX_N_31L[31] = { SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
                                 SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
                                 SEED_N };
 
-const uint64_t BS_BI_DIMER_TAB[16] = { 13804816994807007403ULL,
+const uint64_t BI_BI_DIMER_TAB[16] = { 13804816994807007403ULL,
                                        0ULL,
                                        0ULL,
                                        16651477977602758975ULL,
@@ -170,7 +170,7 @@ const uint64_t BS_BI_DIMER_TAB[16] = { 13804816994807007403ULL,
 
 };
 
-const uint64_t BS_BI_TRIMER_TAB[64] = { 1559764382008453424ULL,
+const uint64_t BI_BI_TRIMER_TAB[64] = { 1559764382008453424ULL,
                                         0ULL,
                                         0ULL,
                                         5558572668666804388ULL,
@@ -237,7 +237,7 @@ const uint64_t BS_BI_TRIMER_TAB[64] = { 1559764382008453424ULL,
 
 };
 
-const uint64_t BS_BI_TETRAMER_TAB[256] = { 4739669480572086791ULL,
+const uint64_t BI_BI_TETRAMER_TAB[256] = { 4739669480572086791ULL,
                                            0ULL,
                                            0ULL,
                                            1821654728216263571ULL,
@@ -496,7 +496,7 @@ const uint64_t BS_BI_TETRAMER_TAB[256] = { 4739669480572086791ULL,
 
 };
 
-const uint64_t* const BS_BI_MS_TAB_33R[ASCII_SIZE] = {
+const uint64_t* const BI_BI_MS_TAB_33R[ASCII_SIZE] = {
   XX_N_33R, BI_T_33R, XX_N_33R, BI_A_33R,
   BI_A_33R, BI_A_33R, XX_N_33R, BI_T_33R, // 0..7
   XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
@@ -563,7 +563,7 @@ const uint64_t* const BS_BI_MS_TAB_33R[ASCII_SIZE] = {
   XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R // 248..255
 };
 
-const uint64_t* const BS_BI_MS_TAB_31L[ASCII_SIZE] = {
+const uint64_t* const BI_BI_MS_TAB_31L[ASCII_SIZE] = {
   XX_N_31L, BI_T_31L, XX_N_31L, BI_A_31L,
   BI_A_31L, BI_A_31L, XX_N_31L, BI_T_31L, // 0..7
   XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
@@ -630,7 +630,7 @@ const uint64_t* const BS_BI_MS_TAB_31L[ASCII_SIZE] = {
   XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L // 248..255
 };
 
-const uint8_t BS_BI_CONVERT_TAB[ASCII_SIZE] = {
+const uint8_t BI_BI_CONVERT_TAB[ASCII_SIZE] = {
   255, 255, 255, 255, 255, 255, 255, 255, // 0..7
   255, 255, 255, 255, 255, 255, 255, 255, // 8..15
   255, 255, 255, 255, 255, 255, 255, 255, // 16..23
@@ -665,7 +665,7 @@ const uint8_t BS_BI_CONVERT_TAB[ASCII_SIZE] = {
   255, 255, 255, 255, 255, 255, 255, 255  // 248..255
 };
 
-const uint8_t BS_BI_RC_CONVERT_TAB[ASCII_SIZE] = {
+const uint8_t BI_BI_RC_CONVERT_TAB[ASCII_SIZE] = {
   255, 255, 255, 255, 255, 255, 255, 255, // 0..7
   255, 255, 255, 255, 255, 255, 255, 255, // 8..15
   255, 255, 255, 255, 255, 255, 255, 255, // 16..23
@@ -715,7 +715,7 @@ inline const std::unordered_set<std::string> VALID_MODES = { "CG",
                                                              "CT",
                                                              "CA" };
 
-const uint64_t BS_CT_SEED_TAB[ASCII_SIZE] = {
+const uint64_t BI_CT_SEED_TAB[ASCII_SIZE] = {
   XX_SEED_N_, GA_SEED_T_, XX_SEED_N_, GA_SEED_GA,
   GA_SEED_GA, GA_SEED_GA, XX_SEED_N_, GA_SEED_C_, // 0..7
   XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
@@ -782,7 +782,7 @@ const uint64_t BS_CT_SEED_TAB[ASCII_SIZE] = {
   XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_ // 248..255
 };
 
-const uint64_t BS_GA_SEED_TAB[ASCII_SIZE] = {
+const uint64_t BI_GA_SEED_TAB[ASCII_SIZE] = {
   XX_SEED_N_, CT_SEED_CT, XX_SEED_N_, CT_SEED_G_,
   CT_SEED_A_, CT_SEED_A_, XX_SEED_N_, CT_SEED_CT, // 0..7
   XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_,
@@ -849,7 +849,7 @@ const uint64_t BS_GA_SEED_TAB[ASCII_SIZE] = {
   XX_SEED_N_, XX_SEED_N_, XX_SEED_N_, XX_SEED_N_ // 248..255
 };
 
-const uint64_t BS_CT_DIMER_TAB[16] = { 5270258388568741472ULL,
+const uint64_t BI_CT_DIMER_TAB[16] = { 5270258388568741472ULL,
                                        0ULL,
                                        8508589596476603406ULL,
                                        6744014374774716958ULL,
@@ -868,7 +868,7 @@ const uint64_t BS_CT_DIMER_TAB[16] = { 5270258388568741472ULL,
 
 };
 
-const uint64_t BS_CT_TRIMER_TAB[64] = { 12296542375903994143ULL,
+const uint64_t BI_CT_TRIMER_TAB[64] = { 12296542375903994143ULL,
                                         0ULL,
                                         10777453763052456817ULL,
                                         13696059339288153441ULL,
@@ -935,7 +935,7 @@ const uint64_t BS_CT_TRIMER_TAB[64] = { 12296542375903994143ULL,
 
 };
 
-const uint64_t BS_CT_TETRAMER_TAB[256] = { 7903069985244696545ULL,
+const uint64_t BI_CT_TETRAMER_TAB[256] = { 7903069985244696545ULL,
                                            0ULL,
                                            5952199028685153679ULL,
                                            8726125620783047583ULL,
@@ -1194,7 +1194,7 @@ const uint64_t BS_CT_TETRAMER_TAB[256] = { 7903069985244696545ULL,
 
 };
 
-const uint64_t BS_GA_DIMER_TAB[16] = { 15466952634673191035ULL,
+const uint64_t BI_GA_DIMER_TAB[16] = { 15466952634673191035ULL,
                                        10754575533572636654ULL,
                                        0ULL,
                                        11097913711551190186ULL,
@@ -1213,7 +1213,7 @@ const uint64_t BS_GA_DIMER_TAB[16] = { 15466952634673191035ULL,
 
 };
 
-const uint64_t BS_GA_TRIMER_TAB[64] = { 16201651124989724449ULL,
+const uint64_t BI_GA_TRIMER_TAB[64] = { 16201651124989724449ULL,
                                         11767230542839996596ULL,
                                         0ULL,
                                         12425925165519260656ULL,
@@ -1280,7 +1280,7 @@ const uint64_t BS_GA_TRIMER_TAB[64] = { 16201651124989724449ULL,
 
 };
 
-const uint64_t BS_GA_TETRAMER_TAB[256] = { 10102482841122093461ULL,
+const uint64_t BI_GA_TETRAMER_TAB[256] = { 10102482841122093461ULL,
                                            14963615003264376320ULL,
                                            0ULL,
                                            13877042217463412036ULL,
@@ -1713,7 +1713,7 @@ static const uint64_t GA_T_31L[31] = {
   0x9d47f400000000
 };
 
-const uint64_t* const BS_CT_MS_TAB_33R[ASCII_SIZE] = {
+const uint64_t* const BI_CT_MS_TAB_33R[ASCII_SIZE] = {
   XX_N_33R, GA_T_33R, XX_N_33R, GA_GA33R,
   GA_GA33R, GA_GA33R, XX_N_33R, GA_C_33R, // 0..7
   XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
@@ -1780,7 +1780,7 @@ const uint64_t* const BS_CT_MS_TAB_33R[ASCII_SIZE] = {
   XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R // 248..255
 };
 
-const uint64_t* const BS_CT_MS_TAB_31L[ASCII_SIZE] = {
+const uint64_t* const BI_CT_MS_TAB_31L[ASCII_SIZE] = {
   XX_N_31L, GA_T_31L, XX_N_31L, GA_GA31L,
   GA_GA31L, GA_GA31L, XX_N_31L, GA_C_31L, // 0..7
   XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
@@ -1847,7 +1847,7 @@ const uint64_t* const BS_CT_MS_TAB_31L[ASCII_SIZE] = {
   XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L // 248..255
 };
 
-const uint64_t* const BS_GA_MS_TAB_33R[ASCII_SIZE] = {
+const uint64_t* const BI_GA_MS_TAB_33R[ASCII_SIZE] = {
   XX_N_33R, CT_CT33R, XX_N_33R, CT_G_33R,
   CT_A_33R, CT_A_33R, XX_N_33R, CT_CT33R, // 0..7
   XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R,
@@ -1914,7 +1914,7 @@ const uint64_t* const BS_GA_MS_TAB_33R[ASCII_SIZE] = {
   XX_N_33R, XX_N_33R, XX_N_33R, XX_N_33R // 248..255
 };
 
-const uint64_t* const BS_GA_MS_TAB_31L[ASCII_SIZE] = {
+const uint64_t* const BI_GA_MS_TAB_31L[ASCII_SIZE] = {
   XX_N_31L, CT_CT31L, XX_N_31L, CT_G_31L,
   CT_A_31L, CT_A_31L, XX_N_31L, CT_CT31L, // 0..7
   XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L,
@@ -1981,7 +1981,7 @@ const uint64_t* const BS_GA_MS_TAB_31L[ASCII_SIZE] = {
   XX_N_31L, XX_N_31L, XX_N_31L, XX_N_31L // 248..255
 };
 
-const uint8_t BS_CT_CONVERT_TAB[ASCII_SIZE] = {
+const uint8_t BI_CT_CONVERT_TAB[ASCII_SIZE] = {
   255, 255, 255, 255, 255, 255, 255, 255, // 0..7
   255, 255, 255, 255, 255, 255, 255, 255, // 8..15
   255, 255, 255, 255, 255, 255, 255, 255, // 16..23
@@ -2016,7 +2016,7 @@ const uint8_t BS_CT_CONVERT_TAB[ASCII_SIZE] = {
   255, 255, 255, 255, 255, 255, 255, 255  // 248..255
 };
 
-const uint8_t BS_CT_RC_CONVERT_TAB[ASCII_SIZE] = {
+const uint8_t BI_CT_RC_CONVERT_TAB[ASCII_SIZE] = {
   255, 255, 255, 255, 255, 255, 255, 255, // 0..7
   255, 255, 255, 255, 255, 255, 255, 255, // 8..15
   255, 255, 255, 255, 255, 255, 255, 255, // 16..23
@@ -2051,7 +2051,7 @@ const uint8_t BS_CT_RC_CONVERT_TAB[ASCII_SIZE] = {
   255, 255, 255, 255, 255, 255, 255, 255  // 248..255
 };
 
-const uint8_t BS_GA_CONVERT_TAB[ASCII_SIZE] = {
+const uint8_t BI_GA_CONVERT_TAB[ASCII_SIZE] = {
   255, 255, 255, 255, 255, 255, 255, 255, // 0..7
   255, 255, 255, 255, 255, 255, 255, 255, // 8..15
   255, 255, 255, 255, 255, 255, 255, 255, // 16..23
@@ -2086,7 +2086,7 @@ const uint8_t BS_GA_CONVERT_TAB[ASCII_SIZE] = {
   255, 255, 255, 255, 255, 255, 255, 255  // 248..255
 };
 
-const uint8_t BS_GA_RC_CONVERT_TAB[ASCII_SIZE] = {
+const uint8_t BI_GA_RC_CONVERT_TAB[ASCII_SIZE] = {
   255, 255, 255, 255, 255, 255, 255, 255, // 0..7
   255, 255, 255, 255, 255, 255, 255, 255, // 8..15
   255, 255, 255, 255, 255, 255, 255, 255, // 16..23
@@ -2121,7 +2121,7 @@ const uint8_t BS_GA_RC_CONVERT_TAB[ASCII_SIZE] = {
   255, 255, 255, 255, 255, 255, 255, 255  // 248..255
 };
 
-constexpr uint8_t BS_CONVERT_TAB[128] = {
+constexpr uint8_t BI_CONVERT_TAB[128] = {
   // 0–64
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -2130,7 +2130,7 @@ constexpr uint8_t BS_CONVERT_TAB[128] = {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-constexpr uint8_t BS_RC_CONVERT_TAB[128] = {
+constexpr uint8_t BI_RC_CONVERT_TAB[128] = {
 
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -2213,7 +2213,7 @@ constexpr uint64_t CT_DIMER_TAB[45] = {
 
 // Generic dimer-based rolling hash
 inline std::vector<uint64_t>
-base_forward_bs_hash(const char* seq,
+base_forward_bi_hash(const char* seq,
                      bool has_second,
                      unsigned k,
                      const uint64_t* DIMER_TAB)
@@ -2225,8 +2225,8 @@ base_forward_bs_hash(const char* seq,
     h0 = srol(h0, 1);
     const char c1 = seq[i];
     const char c2 = seq[i + 1];
-    const uint8_t a = BS_CONVERT_TAB[(unsigned char)c1];
-    const uint8_t b = BS_CONVERT_TAB[(unsigned char)c2];
+    const uint8_t a = BI_CONVERT_TAB[(unsigned char)c1];
+    const uint8_t b = BI_CONVERT_TAB[(unsigned char)c2];
     const uint8_t loc = 10 * a + b; // yields 11, 12, ..., 44
     h0 ^= DIMER_TAB[loc];
   }
@@ -2238,8 +2238,8 @@ base_forward_bs_hash(const char* seq,
     h1 = srol(h1, 1);
     const char c1 = seq[i];
     const char c2 = seq[i + 1];
-    const uint8_t a = BS_CONVERT_TAB[(unsigned char)c1];
-    const uint8_t b = BS_CONVERT_TAB[(unsigned char)c2];
+    const uint8_t a = BI_CONVERT_TAB[(unsigned char)c1];
+    const uint8_t b = BI_CONVERT_TAB[(unsigned char)c2];
     const uint8_t loc = 10 * a + b;
     h1 ^= DIMER_TAB[loc];
   }
@@ -3278,7 +3278,7 @@ constexpr const uint64_t* MS_TAB_31L_CT[45] = {
 };
 
 inline uint64_t
-srol_bs_table(uint8_t out_idx,
+srol_bi_table(uint8_t out_idx,
               unsigned d,
               const uint64_t* const* TAB_33R,
               const uint64_t* const* TAB_31L)
@@ -3289,7 +3289,7 @@ srol_bs_table(uint8_t out_idx,
 }
 
 inline uint64_t
-next_forward_bs_hash(uint64_t fh_val,
+next_forward_bi_hash(uint64_t fh_val,
                      unsigned k,
                      unsigned char char_out1,
                      unsigned char char_out2,
@@ -3299,19 +3299,19 @@ next_forward_bs_hash(uint64_t fh_val,
                      const uint64_t* const* TAB_33R,
                      const uint64_t* const* TAB_31L)
 {
-  uint8_t out_idx = 10 * BS_CONVERT_TAB[char_out1] + BS_CONVERT_TAB[char_out2];
-  uint8_t in_idx = 10 * BS_CONVERT_TAB[char_in1] + BS_CONVERT_TAB[char_in2];
+  uint8_t out_idx = 10 * BI_CONVERT_TAB[char_out1] + BI_CONVERT_TAB[char_out2];
+  uint8_t in_idx = 10 * BI_CONVERT_TAB[char_in1] + BI_CONVERT_TAB[char_in2];
 
   uint64_t h_val = srol(fh_val);
 
-  h_val ^= srol_bs_table(out_idx, k, TAB_33R, TAB_31L);
+  h_val ^= srol_bi_table(out_idx, k, TAB_33R, TAB_31L);
   h_val ^= DIMER_TAB[in_idx];
 
   return h_val;
 }
 
 inline uint64_t
-prev_forward_bs_hash(uint64_t fh_val,
+prev_forward_bi_hash(uint64_t fh_val,
                      unsigned k,
                      unsigned char char_out1,
                      unsigned char char_out2,
@@ -3321,10 +3321,10 @@ prev_forward_bs_hash(uint64_t fh_val,
                      const uint64_t* const* TAB_33R,
                      const uint64_t* const* TAB_31L)
 {
-  uint8_t out_idx = 10 * BS_CONVERT_TAB[char_out1] + BS_CONVERT_TAB[char_out2];
-  uint8_t in_idx = 10 * BS_CONVERT_TAB[char_in1] + BS_CONVERT_TAB[char_in2];
+  uint8_t out_idx = 10 * BI_CONVERT_TAB[char_out1] + BI_CONVERT_TAB[char_out2];
+  uint8_t in_idx = 10 * BI_CONVERT_TAB[char_in1] + BI_CONVERT_TAB[char_in2];
 
-  uint64_t h_val = fh_val ^ srol_bs_table(in_idx, k, TAB_33R, TAB_31L);
+  uint64_t h_val = fh_val ^ srol_bi_table(in_idx, k, TAB_33R, TAB_31L);
   h_val ^= DIMER_TAB[out_idx];
   h_val = sror(h_val);
   return h_val;
@@ -3332,7 +3332,7 @@ prev_forward_bs_hash(uint64_t fh_val,
 
 // Generic dimer-based reverse hash using pointer table
 inline std::vector<uint64_t>
-base_reverse_bs_hash(const char* seq,
+base_reverse_bi_hash(const char* seq,
                      bool has_second,
                      unsigned k,
                      const uint64_t* DIMER_TAB)
@@ -3343,8 +3343,8 @@ base_reverse_bs_hash(const char* seq,
 
   for (int i = (int)k - 1; i >= 1; i -= 2) {
     h0 = srol(h0, 1);
-    const uint8_t a = BS_RC_CONVERT_TAB[(unsigned char)seq[i]];
-    const uint8_t b = BS_RC_CONVERT_TAB[(unsigned char)seq[i - 1]];
+    const uint8_t a = BI_RC_CONVERT_TAB[(unsigned char)seq[i]];
+    const uint8_t b = BI_RC_CONVERT_TAB[(unsigned char)seq[i - 1]];
     const uint8_t loc = 10 * a + b;
     h0 ^= DIMER_TAB[loc];
   }
@@ -3354,8 +3354,8 @@ base_reverse_bs_hash(const char* seq,
 
   for (int i = (int)k; i >= 2; i -= 2) {
     h1 = srol(h1, 1);
-    const uint8_t a = BS_RC_CONVERT_TAB[(unsigned char)seq[i]];
-    const uint8_t b = BS_RC_CONVERT_TAB[(unsigned char)seq[i - 1]];
+    const uint8_t a = BI_RC_CONVERT_TAB[(unsigned char)seq[i]];
+    const uint8_t b = BI_RC_CONVERT_TAB[(unsigned char)seq[i - 1]];
     const uint8_t loc = 10 * a + b;
     h1 ^= DIMER_TAB[loc];
   }
@@ -3364,7 +3364,7 @@ base_reverse_bs_hash(const char* seq,
 }
 
 inline uint64_t
-next_reverse_bs_hash(uint64_t rh_val,
+next_reverse_bi_hash(uint64_t rh_val,
                      unsigned k,
                      unsigned char char_out1,
                      unsigned char char_out2,
@@ -3375,17 +3375,17 @@ next_reverse_bs_hash(uint64_t rh_val,
                      const uint64_t* const* TAB_31L)
 {
   uint8_t out_idx =
-    10 * BS_RC_CONVERT_TAB[char_out2] + BS_RC_CONVERT_TAB[char_out1];
+    10 * BI_RC_CONVERT_TAB[char_out2] + BI_RC_CONVERT_TAB[char_out1];
   uint8_t in_idx =
-    10 * BS_RC_CONVERT_TAB[char_in2] + BS_RC_CONVERT_TAB[char_in1];
-  uint64_t h_val = rh_val ^ srol_bs_table(in_idx, k, TAB_33R, TAB_31L);
+    10 * BI_RC_CONVERT_TAB[char_in2] + BI_RC_CONVERT_TAB[char_in1];
+  uint64_t h_val = rh_val ^ srol_bi_table(in_idx, k, TAB_33R, TAB_31L);
   h_val ^= DIMER_TAB[out_idx];
   h_val = sror(h_val);
   return h_val;
 }
 
 inline uint64_t
-prev_reverse_bs_hash(uint64_t rh_val,
+prev_reverse_bi_hash(uint64_t rh_val,
                      unsigned k,
                      unsigned char char_out1,
                      unsigned char char_out2,
@@ -3396,12 +3396,12 @@ prev_reverse_bs_hash(uint64_t rh_val,
                      const uint64_t* const* TAB_31L)
 {
   uint8_t out_idx =
-    10 * BS_RC_CONVERT_TAB[char_out2] + BS_RC_CONVERT_TAB[char_out1];
+    10 * BI_RC_CONVERT_TAB[char_out2] + BI_RC_CONVERT_TAB[char_out1];
   uint8_t in_idx =
-    10 * BS_RC_CONVERT_TAB[char_in2] + BS_RC_CONVERT_TAB[char_in1];
+    10 * BI_RC_CONVERT_TAB[char_in2] + BI_RC_CONVERT_TAB[char_in1];
   uint64_t h_val = srol(rh_val);
   h_val ^= DIMER_TAB[in_idx];
-  h_val ^= srol_bs_table(out_idx, k, TAB_33R, TAB_31L);
+  h_val ^= srol_bi_table(out_idx, k, TAB_33R, TAB_31L);
   return h_val;
 }
 

@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include <btllib/bshash_hashing_internals.hpp>
+#include <btllib/bihash_hashing_internals.hpp>
 #include <btllib/hashing_internals.hpp>
 #include <btllib/nthash_kmer.hpp>
 #include <btllib/status.hpp>
@@ -26,32 +26,32 @@ using hashing_internals::SEED_N;
 using hashing_internals::SEED_TAB;
 using hashing_internals::sub_hash;
 
-using hashing_internals::BS_CT_SEED_TAB;
-using hashing_internals::BS_GA_SEED_TAB;
+using hashing_internals::BI_CT_SEED_TAB;
+using hashing_internals::BI_GA_SEED_TAB;
 
-using hashing_internals::BS_CT_MS_TAB_33R;
-using hashing_internals::BS_GA_MS_TAB_33R;
+using hashing_internals::BI_CT_MS_TAB_33R;
+using hashing_internals::BI_GA_MS_TAB_33R;
 
-using hashing_internals::BS_CT_MS_TAB_31L;
-using hashing_internals::BS_GA_MS_TAB_31L;
+using hashing_internals::BI_CT_MS_TAB_31L;
+using hashing_internals::BI_GA_MS_TAB_31L;
 
-using hashing_internals::BS_CT_CONVERT_TAB;
-using hashing_internals::BS_GA_CONVERT_TAB;
+using hashing_internals::BI_CT_CONVERT_TAB;
+using hashing_internals::BI_GA_CONVERT_TAB;
 
-using hashing_internals::BS_CT_RC_CONVERT_TAB;
-using hashing_internals::BS_GA_RC_CONVERT_TAB;
+using hashing_internals::BI_CT_RC_CONVERT_TAB;
+using hashing_internals::BI_GA_RC_CONVERT_TAB;
 
-using hashing_internals::BS_CT_DIMER_TAB;
-using hashing_internals::BS_CT_TETRAMER_TAB;
-using hashing_internals::BS_CT_TRIMER_TAB;
-using hashing_internals::BS_GA_DIMER_TAB;
-using hashing_internals::BS_GA_TETRAMER_TAB;
-using hashing_internals::BS_GA_TRIMER_TAB;
+using hashing_internals::BI_CT_DIMER_TAB;
+using hashing_internals::BI_CT_TETRAMER_TAB;
+using hashing_internals::BI_CT_TRIMER_TAB;
+using hashing_internals::BI_GA_DIMER_TAB;
+using hashing_internals::BI_GA_TETRAMER_TAB;
+using hashing_internals::BI_GA_TRIMER_TAB;
 
 /**
- * Directional BS-seq k-mer hashing.
+ * Directional BI-seq k-mer hashing.
  */
-class BsHashDirectional
+class BiHashDirectional
 {
 
 public:
@@ -65,7 +65,7 @@ public:
    *        used to determine how bases are interpreted during hashing.
    * @param pos Position in the sequence to start hashing from
    */
-  BsHashDirectional(const char* seq,
+  BiHashDirectional(const char* seq,
                     size_t seq_len,
                     hashing_internals::NUM_HASHES_TYPE num_hashes,
                     hashing_internals::K_TYPE k,
@@ -80,14 +80,14 @@ public:
     , initialized(false)
     , hash_arr(new uint64_t[num_hashes])
   {
-    check_error(k == 0, "BsHash: k must be greater than 0");
-    check_error(k % 2 == 1, "BsHash: k must be even");
-    check_error((k / 2) % 2 == 0, "BsHash: k must have odd number of dimers");
+    check_error(k == 0, "BiHash: k must be greater than 0");
+    check_error(k % 2 == 1, "BiHash: k must be even");
+    check_error((k / 2) % 2 == 0, "BiHash: k must have odd number of dimers");
     check_error(this->seq_len < k,
-                "BsHash: sequence length (" + std::to_string(this->seq_len) +
+                "BiHash: sequence length (" + std::to_string(this->seq_len) +
                   ") is smaller than k (" + std::to_string(k) + ")");
     check_error(pos > this->seq_len - k,
-                "BsHash: passed position (" + std::to_string(pos) +
+                "BiHash: passed position (" + std::to_string(pos) +
                   ") is larger than sequence length (" +
                   std::to_string(this->seq_len) + ")");
 
@@ -96,38 +96,38 @@ public:
     if (conversion_type == "CT") {
       meth_base_idx = center_dimer_start;
 
-      primitive_tab = BS_CT_SEED_TAB;
+      primitive_tab = BI_CT_SEED_TAB;
 
-      right_table = BS_CT_MS_TAB_33R;
-      left_table = BS_CT_MS_TAB_31L;
+      right_table = BI_CT_MS_TAB_33R;
+      left_table = BI_CT_MS_TAB_31L;
 
-      convert_tab = BS_CT_CONVERT_TAB;
-      rc_convert_tab = BS_CT_RC_CONVERT_TAB;
+      convert_tab = BI_CT_CONVERT_TAB;
+      rc_convert_tab = BI_CT_RC_CONVERT_TAB;
 
-      dimer_tab = BS_CT_DIMER_TAB;
-      rc_dimer_tab = BS_GA_DIMER_TAB;
-      trimer_tab = BS_CT_TRIMER_TAB;
-      rc_trimer_tab = BS_GA_TRIMER_TAB;
-      tetramer_tab = BS_CT_TETRAMER_TAB;
+      dimer_tab = BI_CT_DIMER_TAB;
+      rc_dimer_tab = BI_GA_DIMER_TAB;
+      trimer_tab = BI_CT_TRIMER_TAB;
+      rc_trimer_tab = BI_GA_TRIMER_TAB;
+      tetramer_tab = BI_CT_TETRAMER_TAB;
       ;
-      rc_tetramer_tab = BS_GA_TETRAMER_TAB;
+      rc_tetramer_tab = BI_GA_TETRAMER_TAB;
     } else if (conversion_type == "GA") {
       meth_base_idx = center_dimer_start + 1;
 
-      primitive_tab = BS_GA_SEED_TAB;
+      primitive_tab = BI_GA_SEED_TAB;
 
-      right_table = BS_GA_MS_TAB_33R;
-      left_table = BS_GA_MS_TAB_31L;
+      right_table = BI_GA_MS_TAB_33R;
+      left_table = BI_GA_MS_TAB_31L;
 
-      convert_tab = BS_GA_CONVERT_TAB;
-      rc_convert_tab = BS_GA_RC_CONVERT_TAB;
+      convert_tab = BI_GA_CONVERT_TAB;
+      rc_convert_tab = BI_GA_RC_CONVERT_TAB;
 
-      dimer_tab = BS_GA_DIMER_TAB;
-      rc_dimer_tab = BS_CT_DIMER_TAB;
-      trimer_tab = BS_GA_TRIMER_TAB;
-      rc_trimer_tab = BS_CT_TRIMER_TAB;
-      tetramer_tab = BS_GA_TETRAMER_TAB;
-      rc_tetramer_tab = BS_CT_TETRAMER_TAB;
+      dimer_tab = BI_GA_DIMER_TAB;
+      rc_dimer_tab = BI_CT_DIMER_TAB;
+      trimer_tab = BI_GA_TRIMER_TAB;
+      rc_trimer_tab = BI_CT_TRIMER_TAB;
+      tetramer_tab = BI_GA_TETRAMER_TAB;
+      rc_tetramer_tab = BI_CT_TETRAMER_TAB;
     } else {
       check_error(
         true, "Unsupported conversion_type. Must be CT or GA, as capitalized.");
@@ -135,7 +135,7 @@ public:
   }
 
   /**
-   * Construct an BsHash object for k-mers.
+   * Construct an BiHash object for k-mers.
    * @param seq Sequence string
    * @param num_hashes Number of hashes to produce per k-mer
    * @param k K-mer size
@@ -143,12 +143,12 @@ public:
    *        used to determine how bases are interpreted during hashing.
    * @param pos Position in sequence to start hashing from
    */
-  BsHashDirectional(const std::string& seq,
+  BiHashDirectional(const std::string& seq,
                     hashing_internals::NUM_HASHES_TYPE num_hashes,
                     hashing_internals::K_TYPE k,
                     std::string conversion_type,
                     size_t pos = 0)
-    : BsHashDirectional(seq.data(),
+    : BiHashDirectional(seq.data(),
                         seq.size(),
                         num_hashes,
                         k,
@@ -157,7 +157,7 @@ public:
   {
   }
 
-  BsHashDirectional(const BsHashDirectional& obj)
+  BiHashDirectional(const BiHashDirectional& obj)
     : seq(obj.seq)
     , seq_len(obj.seq_len)
     , num_hashes(obj.num_hashes)
@@ -184,15 +184,15 @@ public:
       hash_arr.get(), obj.hash_arr.get(), num_hashes * sizeof(uint64_t));
   }
 
-  BsHashDirectional(BsHashDirectional&&) = default;
+  BiHashDirectional(BiHashDirectional&&) = default;
   /**
    * Calculate the hash values of current k-mer and advance to the next k-mer.
-   * BsHash advances one nucleotide at a time until it finds a k-mer with valid
+   * BiHash advances one nucleotide at a time until it finds a k-mer with valid
    * characters (ACGTU) and skips over those with invalid characters (non-ACGTU,
    * including N). This method must be called before hashes() is accessed, for
-   * the first and every subsequent hashed kmer. get_pos() may be called at any
+   * the first and every subiequent hashed kmer. get_pos() may be called at any
    * time to obtain the position of last hashed k-mer or the k-mer to be hashed
-   * if roll() has never been called on this BsHash object. It is important to
+   * if roll() has never been called on this BiHash object. It is important to
    * note that the number of roll() calls is NOT necessarily equal to get_pos(),
    * if there are N's or invalid characters in the hashed sequence.
    * @return \p true on success and \p false otherwise
@@ -269,7 +269,7 @@ public:
 
   /**
    * Peeks the hash values as if roll() was called (without advancing the
-   * BsHash object. The peeked hash values can be obtained through the
+   * BiHash object. The peeked hash values can be obtained through the
    * hashes() method.
    * @return \p true on success and \p false otherwise
    */
@@ -295,7 +295,7 @@ public:
 
   /**
    * Peeks the hash values as if roll() was called for char_in (without
-   * advancing the BsHash object. The peeked hash values can be obtained through
+   * advancing the BiHash object. The peeked hash values can be obtained through
    * the hashes() method.
    * @return \p true on success and \p false otherwise
    */
@@ -384,7 +384,7 @@ public:
 
   /**
    * Get the position of last hashed k-mer or the k-mer to be hashed if roll()
-   * has never been called on this BsHash object.
+   * has never been called on this BiHash object.
    * @return Position of the most recently hashed k-mer's first base-pair
    */
   size_t get_pos() const { return pos; }
