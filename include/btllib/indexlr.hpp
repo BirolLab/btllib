@@ -94,13 +94,47 @@ public:
       , qual(std::move(qual))
     {
     }
+    Minimizer(uint64_t min_hash,
+                uint64_t out_hash,
+                size_t pos,
+                bool forward,
+                std::string seq,
+                std::vector<uint64_t> all_hashes)
+        : min_hash(min_hash)
+        , out_hash(out_hash)
+        , pos(pos)
+        , forward(forward)
+        , seq(std::move(seq))
+        , all_hashes(std::move(all_hashes))
+      {
+      }
+
+    Minimizer(uint64_t min_hash,
+                uint64_t out_hash,
+                size_t pos,
+                bool forward,
+                std::string seq,
+                std::string qual,
+                std::vector<uint64_t> all_hashes)
+        : min_hash(min_hash)
+        , out_hash(out_hash)
+        , pos(pos)
+        , forward(forward)
+        , seq(std::move(seq))
+        , qual(std::move(qual))
+        , all_hashes(std::move(all_hashes))
+      {
+      }
 
     uint64_t min_hash = 0, out_hash = 0;
     size_t pos = 0;
     bool forward = false;
     std::string seq;
     std::string qual;
+    std::vector<uint64_t> all_hashes;
   };
+
+
 
   using HashedKmer = Minimizer;
 
@@ -469,17 +503,17 @@ Indexlr::filter_hashed_kmer(Indexlr::HashedKmer& hk,
                             const BloomFilter& filter_out_bf)
 {
   if (filter_in && filter_out) {
-    std::vector<uint64_t> tmp;
-    tmp = { hk.min_hash };
-    if (!filter_in_bf.contains(tmp) || filter_out_bf.contains(tmp)) {
+    //std::vector<uint64_t> tmp;
+    //tmp = { hk.min_hash };
+    if (!filter_in_bf.contains(hk.all_hashes) || filter_out_bf.contains(hk.all_hashes)) {
       hk.min_hash = std::numeric_limits<uint64_t>::max();
     }
   } else if (filter_in) {
-    if (!filter_in_bf.contains({ hk.min_hash })) {
+    if (!filter_in_bf.contains(hk.all_hashes)) {
       hk.min_hash = std::numeric_limits<uint64_t>::max();
     }
   } else if (filter_out) {
-    if (filter_out_bf.contains({ hk.min_hash })) {
+    if (filter_out_bf.contains(hk.all_hashes)) {
       hk.min_hash = std::numeric_limits<uint64_t>::max();
     }
   }
@@ -562,7 +596,18 @@ Indexlr::minimize(const std::string& seq, const std::string& qual) const
   ssize_t min_idx_left, min_idx_right, min_pos_prev = -1;
   const Minimizer* min_current = nullptr;
   size_t idx = 0;
-  for (NtHash nh(seq, 2, k); nh.roll(); ++idx) {
+  size_t num_hashes = 0;
+  if (!filter_in() && !filter_out()) {
+      num_hashes = 2;
+  } 
+  else if (filter_in()) {
+      num_hashes = std::max(static_cast<uint32_t>(2), filter_in_bf.get().get_hash_num());
+  } 
+  else {
+      num_hashes = std::max(static_cast<uint32_t>(2), filter_out_bf.get().get_hash_num());
+  }
+
+  for (NtHash nh(seq, num_hashes, k); nh.roll(); ++idx) {
     auto& hk = hashed_kmers_buffer[idx % hashed_kmers_buffer.size()];
 
     hk = HashedKmer(nh.hashes()[0],
@@ -570,7 +615,8 @@ Indexlr::minimize(const std::string& seq, const std::string& qual) const
                     nh.get_pos(),
                     nh.get_forward_hash() <= nh.get_reverse_hash(),
                     output_seq() ? seq.substr(nh.get_pos(), k) : "",
-                    output_qual() ? qual.substr(nh.get_pos(), k) : "");
+                    output_qual() ? qual.substr(nh.get_pos(), k) : "",
+                    std::vector<uint64_t>(nh.hashes(), nh.hashes() + num_hashes));
 
     filter_hashed_kmer(
       hk, filter_in(), filter_out(), filter_in_bf.get(), filter_out_bf.get());
