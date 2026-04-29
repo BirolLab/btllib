@@ -609,7 +609,7 @@ Indexlr::minimize(const std::string& seq, const std::string& qual) const
   size_t idx = 0;
   size_t bf_num_hashes = 0;
   if (!filter_in() && !filter_out()) {
-    bf_num_hashes = 2;
+    bf_num_hashes = 1;
   } else if (filter_in()) {
     bf_num_hashes = filter_in_bf.get().get_hash_num();
   } else {
