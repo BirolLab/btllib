@@ -607,7 +607,7 @@ Indexlr::minimize(const std::string& seq, const std::string& qual) const
   ssize_t min_idx_left, min_idx_right, min_pos_prev = -1;
   const Minimizer* min_current = nullptr;
   size_t idx = 0;
-  size_t bf_num_hashes = 0;
+  size_t num_hashes = 0;
   if (filter_in() && filter_out()) {
     if (filter_in_bf.get().get_hash_num() ==
         filter_out_bf.get().get_hash_num()) {
@@ -616,18 +616,18 @@ Indexlr::minimize(const std::string& seq, const std::string& qual) const
     }
   }
   if (!filter_in() && !filter_out()) {
-    bf_num_hashes = 1;
+    num_hashes = 1;
   } else if (filter_in()) {
-    bf_num_hashes = filter_in_bf.get().get_hash_num();
+    num_hashes = filter_in_bf.get().get_hash_num();
   } else {
-    bf_num_hashes = filter_out_bf.get().get_hash_num();
+    num_hashes = filter_out_bf.get().get_hash_num();
   }
 
-  size_t nthash_num_hashes = std::max(static_cast<size_t>(2), bf_num_hashes);
+  size_t nthash_num_hashes = std::max(static_cast<size_t>(2), num_hashes);
 
   for (NtHash nh(seq, nthash_num_hashes, k); nh.roll(); ++idx) {
     auto& hk = hashed_kmers_buffer[idx % hashed_kmers_buffer.size()];
-    if (bf_num_hashes == 1) {
+    if (num_hashes == 1) {
       hk = HashedKmer(nh.hashes()[0],
                       nh.hashes()[1],
                       nh.get_pos(),
@@ -643,7 +643,7 @@ Indexlr::minimize(const std::string& seq, const std::string& qual) const
         nh.get_forward_hash() <= nh.get_reverse_hash(),
         output_seq() ? seq.substr(nh.get_pos(), k) : "",
         output_qual() ? qual.substr(nh.get_pos(), k) : "",
-        std::vector<uint64_t>(nh.hashes(), nh.hashes() + bf_num_hashes));
+        std::vector<uint64_t>(nh.hashes(), nh.hashes() + num_hashes));
     }
 
     filter_hashed_kmer(
