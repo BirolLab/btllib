@@ -609,7 +609,7 @@ Indexlr::minimize(const std::string& seq, const std::string& qual) const
   size_t idx = 0;
   size_t num_hashes = 0;
   if (filter_in() && filter_out()) {
-    if (filter_in_bf.get().get_hash_num() ==
+    if (filter_in_bf.get().get_hash_num() !=
         filter_out_bf.get().get_hash_num()) {
       log_error("Bloom filters must use the same number of hashes.");
       std::exit(EXIT_FAILURE); // NOLINT(concurrency-mt-unsafe)
