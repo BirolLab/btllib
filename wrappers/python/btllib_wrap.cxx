@@ -28448,15 +28448,155 @@ fail:
 }
 
 
+SWIGINTERN int _wrap_new_Minimizer__SWIG_3(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  uint64_t arg1 ;
+  uint64_t arg2 ;
+  size_t arg3 ;
+  bool arg4 ;
+  std::string arg5 ;
+  std::vector< uint64_t,std::allocator< uint64_t > > arg6 ;
+  uint64_t val1 ;
+  int ecode1 = 0 ;
+  uint64_t val2 ;
+  int ecode2 = 0 ;
+  size_t val3 ;
+  int ecode3 = 0 ;
+  bool val4 ;
+  int ecode4 = 0 ;
+  btllib::Indexlr::Minimizer *result = 0 ;
+  
+  if ((nobjs < 6) || (nobjs > 6)) SWIG_fail;
+  ecode1 = SWIG_AsVal_unsigned_SS_long_SS_long(swig_obj[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_Minimizer" "', argument " "1"" of type '" "uint64_t""'");
+  } 
+  arg1 = static_cast< uint64_t >(val1);
+  ecode2 = SWIG_AsVal_unsigned_SS_long_SS_long(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_Minimizer" "', argument " "2"" of type '" "uint64_t""'");
+  } 
+  arg2 = static_cast< uint64_t >(val2);
+  ecode3 = SWIG_AsVal_size_t(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_Minimizer" "', argument " "3"" of type '" "size_t""'");
+  } 
+  arg3 = static_cast< size_t >(val3);
+  ecode4 = SWIG_AsVal_bool(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "new_Minimizer" "', argument " "4"" of type '" "bool""'");
+  } 
+  arg4 = static_cast< bool >(val4);
+  {
+    std::string *ptr = (std::string *)0;
+    int res = SWIG_AsPtr_std_string(swig_obj[4], &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "new_Minimizer" "', argument " "5"" of type '" "std::string""'"); 
+    }
+    arg5 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
+  }
+  {
+    std::vector< uint64_t,std::allocator< uint64_t > > *ptr = (std::vector< uint64_t,std::allocator< uint64_t > > *)0;
+    int res = swig::asptr(swig_obj[5], &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "new_Minimizer" "', argument " "6"" of type '" "std::vector< uint64_t,std::allocator< uint64_t > >""'"); 
+    }
+    arg6 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
+  }
+  result = (btllib::Indexlr::Minimizer *)new btllib::Indexlr::Minimizer(arg1,arg2,SWIG_STD_MOVE(arg3),arg4,SWIG_STD_MOVE(arg5),SWIG_STD_MOVE(arg6));
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_btllib__Indexlr__Minimizer, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
+SWIGINTERN int _wrap_new_Minimizer__SWIG_4(PyObject *self, Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  uint64_t arg1 ;
+  uint64_t arg2 ;
+  size_t arg3 ;
+  bool arg4 ;
+  std::string arg5 ;
+  std::string arg6 ;
+  std::vector< uint64_t,std::allocator< uint64_t > > arg7 ;
+  uint64_t val1 ;
+  int ecode1 = 0 ;
+  uint64_t val2 ;
+  int ecode2 = 0 ;
+  size_t val3 ;
+  int ecode3 = 0 ;
+  bool val4 ;
+  int ecode4 = 0 ;
+  btllib::Indexlr::Minimizer *result = 0 ;
+  
+  if ((nobjs < 7) || (nobjs > 7)) SWIG_fail;
+  ecode1 = SWIG_AsVal_unsigned_SS_long_SS_long(swig_obj[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_Minimizer" "', argument " "1"" of type '" "uint64_t""'");
+  } 
+  arg1 = static_cast< uint64_t >(val1);
+  ecode2 = SWIG_AsVal_unsigned_SS_long_SS_long(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_Minimizer" "', argument " "2"" of type '" "uint64_t""'");
+  } 
+  arg2 = static_cast< uint64_t >(val2);
+  ecode3 = SWIG_AsVal_size_t(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_Minimizer" "', argument " "3"" of type '" "size_t""'");
+  } 
+  arg3 = static_cast< size_t >(val3);
+  ecode4 = SWIG_AsVal_bool(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "new_Minimizer" "', argument " "4"" of type '" "bool""'");
+  } 
+  arg4 = static_cast< bool >(val4);
+  {
+    std::string *ptr = (std::string *)0;
+    int res = SWIG_AsPtr_std_string(swig_obj[4], &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "new_Minimizer" "', argument " "5"" of type '" "std::string""'"); 
+    }
+    arg5 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    int res = SWIG_AsPtr_std_string(swig_obj[5], &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "new_Minimizer" "', argument " "6"" of type '" "std::string""'"); 
+    }
+    arg6 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
+  }
+  {
+    std::vector< uint64_t,std::allocator< uint64_t > > *ptr = (std::vector< uint64_t,std::allocator< uint64_t > > *)0;
+    int res = swig::asptr(swig_obj[6], &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "new_Minimizer" "', argument " "7"" of type '" "std::vector< uint64_t,std::allocator< uint64_t > >""'"); 
+    }
+    arg7 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
+  }
+  result = (btllib::Indexlr::Minimizer *)new btllib::Indexlr::Minimizer(arg1,arg2,SWIG_STD_MOVE(arg3),arg4,SWIG_STD_MOVE(arg5),SWIG_STD_MOVE(arg6),SWIG_STD_MOVE(arg7));
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_btllib__Indexlr__Minimizer, SWIG_BUILTIN_INIT |  0 );
+  return resultobj == Py_None ? -1 : 0;
+fail:
+  return -1;
+}
+
+
 SWIGINTERN int _wrap_new_Minimizer(PyObject *self, PyObject *args, PyObject *kwargs) {
   Py_ssize_t argc;
-  PyObject *argv[7] = {
+  PyObject *argv[8] = {
     0
   };
   
   (void)self;
   if (!SWIG_Python_CheckNoKeywords(kwargs, "new_Minimizer")) SWIG_fail;
-  if (!(argc = SWIG_Python_UnpackTuple(args, "new_Minimizer", 0, 6, argv))) SWIG_fail;
+  if (!(argc = SWIG_Python_UnpackTuple(args, "new_Minimizer", 0, 7, argv))) SWIG_fail;
   --argc;
   if (argc == 0) {
     int retval = _wrap_new_Minimizer__SWIG_0(self, argc, argv);
@@ -28469,7 +28609,23 @@ SWIGINTERN int _wrap_new_Minimizer(PyObject *self, PyObject *args, PyObject *kwa
     SWIG_fail;
   }
   if (argc == 6) {
-    int retval = _wrap_new_Minimizer__SWIG_2(self, argc, argv);
+    int _v = 0;
+    {
+      int res = SWIG_AsPtr_std_string(argv[5], (std::string**)(0));
+      _v = SWIG_CheckState(res);
+    }
+    if (!_v) goto check_3;
+    return _wrap_new_Minimizer__SWIG_2(self, argc, argv);
+  }
+check_3:
+  
+  if (argc == 6) {
+    int retval = _wrap_new_Minimizer__SWIG_3(self, argc, argv);
+    if (retval == 0 || !SWIG_Python_TypeErrorOccurred(NULL)) return retval;
+    SWIG_fail;
+  }
+  if (argc == 7) {
+    int retval = _wrap_new_Minimizer__SWIG_4(self, argc, argv);
     if (retval == 0 || !SWIG_Python_TypeErrorOccurred(NULL)) return retval;
     SWIG_fail;
   }
@@ -28479,7 +28635,9 @@ fail:
     "  Possible C/C++ prototypes are:\n"
     "    btllib::Indexlr::Minimizer::Minimizer()\n"
     "    btllib::Indexlr::Minimizer::Minimizer(uint64_t,uint64_t,size_t,bool,std::string)\n"
-    "    btllib::Indexlr::Minimizer::Minimizer(uint64_t,uint64_t,size_t,bool,std::string,std::string)\n");
+    "    btllib::Indexlr::Minimizer::Minimizer(uint64_t,uint64_t,size_t,bool,std::string,std::string)\n"
+    "    btllib::Indexlr::Minimizer::Minimizer(uint64_t,uint64_t,size_t,bool,std::string,std::vector< uint64_t,std::allocator< uint64_t > >)\n"
+    "    btllib::Indexlr::Minimizer::Minimizer(uint64_t,uint64_t,size_t,bool,std::string,std::string,std::vector< uint64_t,std::allocator< uint64_t > >)\n");
   return -1;
 }
 
@@ -28798,6 +28956,57 @@ SWIGINTERN PyObject *_wrap_Minimizer_qual_get(PyObject *self, PyObject *args) {
   arg1 = reinterpret_cast< btllib::Indexlr::Minimizer * >(argp1);
   result = (std::string *) & ((arg1)->qual);
   resultobj = SWIG_From_std_string(static_cast< std::string >(*result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Minimizer_all_hashes_set(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  btllib::Indexlr::Minimizer *arg1 = 0 ;
+  std::vector< uint64_t,std::allocator< uint64_t > > *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject *swig_obj[2] ;
+  
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_btllib__Indexlr__Minimizer, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Minimizer_all_hashes_set" "', argument " "1"" of type '" "btllib::Indexlr::Minimizer *""'"); 
+  }
+  arg1 = reinterpret_cast< btllib::Indexlr::Minimizer * >(argp1);
+  res2 = SWIG_ConvertPtr(swig_obj[0], &argp2,SWIGTYPE_p_std__vectorT_uint64_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Minimizer_all_hashes_set" "', argument " "2"" of type '" "std::vector< uint64_t,std::allocator< uint64_t > > *""'"); 
+  }
+  arg2 = reinterpret_cast< std::vector< uint64_t,std::allocator< uint64_t > > * >(argp2);
+  if (arg1) (arg1)->all_hashes = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Minimizer_all_hashes_get(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  btllib::Indexlr::Minimizer *arg1 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::vector< uint64_t,std::allocator< uint64_t > > *result = 0 ;
+  
+  if (!SWIG_Python_UnpackTuple(args, "Minimizer_all_hashes_get", 0, 0, 0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_btllib__Indexlr__Minimizer, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Minimizer_all_hashes_get" "', argument " "1"" of type '" "btllib::Indexlr::Minimizer *""'"); 
+  }
+  arg1 = reinterpret_cast< btllib::Indexlr::Minimizer * >(argp1);
+  result = (std::vector< uint64_t,std::allocator< uint64_t > > *)& ((arg1)->all_hashes);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__vectorT_uint64_t_t, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -64375,6 +64584,7 @@ static PyTypeObject *SwigPyBuiltin__btllib__Indexlr__Flag_type_create(PyTypeObje
 SWIGINTERN SwigPyClientData SwigPyBuiltin__btllib__Indexlr__Flag_clientdata = {0, 0, 0, 0, 0, 0, 0};
 
 static SwigPyGetSet Minimizer___dict___getset = { SwigPyObject_get___dict__, 0 };
+static SwigPyGetSet Minimizer_all_hashes_getset = { _wrap_Minimizer_all_hashes_get, _wrap_Minimizer_all_hashes_set };
 static SwigPyGetSet Minimizer_min_hash_getset = { _wrap_Minimizer_min_hash_get, _wrap_Minimizer_min_hash_set };
 static SwigPyGetSet Minimizer_seq_getset = { _wrap_Minimizer_seq_get, _wrap_Minimizer_seq_set };
 static SwigPyGetSet Minimizer_out_hash_getset = { _wrap_Minimizer_out_hash_get, _wrap_Minimizer_out_hash_set };
@@ -64383,6 +64593,7 @@ static SwigPyGetSet Minimizer_pos_getset = { _wrap_Minimizer_pos_get, _wrap_Mini
 static SwigPyGetSet Minimizer_qual_getset = { _wrap_Minimizer_qual_get, _wrap_Minimizer_qual_set };
 SWIGINTERN PyGetSetDef SwigPyBuiltin__btllib__Indexlr__Minimizer_getset[] = {
     { (char *)"__dict__", SwigPyBuiltin_FunpackGetterClosure, 0, (char *)"dictionary for instance variables", &Minimizer___dict___getset },
+    { (char *)"all_hashes", SwigPyBuiltin_FunpackGetterClosure, SwigPyBuiltin_FunpackSetterClosure, (char *)"", &Minimizer_all_hashes_getset },
     { (char *)"min_hash", SwigPyBuiltin_FunpackGetterClosure, SwigPyBuiltin_FunpackSetterClosure, (char *)"", &Minimizer_min_hash_getset },
     { (char *)"seq", SwigPyBuiltin_FunpackGetterClosure, SwigPyBuiltin_FunpackSetterClosure, (char *)"", &Minimizer_seq_getset },
     { (char *)"out_hash", SwigPyBuiltin_FunpackGetterClosure, SwigPyBuiltin_FunpackSetterClosure, (char *)"", &Minimizer_out_hash_getset },
@@ -73941,7 +74152,7 @@ static swig_type_info _swigt__p_std__vectorT_int_t = {"_p_std__vectorT_int_t", "
 static swig_type_info _swigt__p_std__vectorT_std__arrayT_unsigned_int_2_t_std__allocatorT_std__arrayT_unsigned_int_2_t_t_t = {"_p_std__vectorT_std__arrayT_unsigned_int_2_t_std__allocatorT_std__arrayT_unsigned_int_2_t_t_t", "btllib::hashing_internals::SpacedSeedBlocks *|std::vector< std::array< unsigned int,2 >,std::allocator< std::array< unsigned int,2 > > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_std__string_t = {"_p_std__vectorT_std__string_t", "std::vector< std::string,std::allocator< std::string > > *|std::vector< std::string > *", 0, 0, (void*)&SwigPyBuiltin__std__vectorT_std__string_t_clientdata, 0};
 static swig_type_info _swigt__p_std__vectorT_std__vectorT_std__arrayT_unsigned_int_2_t_std__allocatorT_std__arrayT_unsigned_int_2_t_t_t_std__allocatorT_std__vectorT_std__arrayT_unsigned_int_2_t_std__allocatorT_std__arrayT_unsigned_int_2_t_t_t_t_t = {"_p_std__vectorT_std__vectorT_std__arrayT_unsigned_int_2_t_std__allocatorT_std__arrayT_unsigned_int_2_t_t_t_std__allocatorT_std__vectorT_std__arrayT_unsigned_int_2_t_std__allocatorT_std__arrayT_unsigned_int_2_t_t_t_t_t", "std::vector< btllib::hashing_internals::SpacedSeedBlocks,std::allocator< btllib::hashing_internals::SpacedSeedBlocks > > *|std::vector< std::vector< std::array< unsigned int,2 >,std::allocator< std::array< unsigned int,2 > > >,std::allocator< std::vector< std::array< unsigned int,2 >,std::allocator< std::array< unsigned int,2 > > > > > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__vectorT_uint64_t_t = {"_p_std__vectorT_uint64_t_t", "std::vector< uint64_t > *|std::vector< uint64_t,std::allocator< uint64_t > > *|std::vector< uint64_t > *", 0, 0, (void*)&SwigPyBuiltin__std__vectorT_uint64_t_t_clientdata, 0};
+static swig_type_info _swigt__p_std__vectorT_uint64_t_t = {"_p_std__vectorT_uint64_t_t", "std::vector< uint64_t > *|std::vector< uint64_t,std::allocator< uint64_t > > *|std::vector< uint64_t,std::allocator< uint64_t > > *|std::vector< uint64_t > *", 0, 0, (void*)&SwigPyBuiltin__std__vectorT_uint64_t_t_clientdata, 0};
 static swig_type_info _swigt__p_std__vectorT_unsigned_char_t = {"_p_std__vectorT_unsigned_char_t", "std::vector< unsigned char,std::allocator< unsigned char > > *|std::vector< unsigned char > *", 0, 0, (void*)&SwigPyBuiltin__std__vectorT_unsigned_char_t_clientdata, 0};
 static swig_type_info _swigt__p_std__vectorT_unsigned_int_t = {"_p_std__vectorT_unsigned_int_t", "btllib::SpacedSeed *|btllib::hashing_internals::SpacedSeed *|btllib::hashing_internals::SpacedSeedMonomers *|std::vector< unsigned int,std::allocator< unsigned int > > *|std::vector< unsigned int > *", 0, 0, (void*)&SwigPyBuiltin__std__vectorT_unsigned_int_t_clientdata, 0};
 static swig_type_info _swigt__p_streamoff = {"_p_streamoff", "std::basic_istream< char >::off_type *|std::basic_ostream< char >::off_type *|streamoff *", 0, 0, (void*)0, 0};
