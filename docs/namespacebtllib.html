@@ -97,6 +97,12 @@ $(function(){ initResizable(false); });
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbtllib_1_1AAHash.html">AAHash</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbtllib_1_1BiHash.html">BiHash</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbtllib_1_1BiHashBi.html">BiHashBi</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbtllib_1_1BiHashDirectional.html">BiHashDirectional</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbtllib_1_1BlindNtHash.html">BlindNtHash</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbtllib_1_1BlindSeedNtHash.html">BlindSeedNtHash</a></td></tr>
@@ -169,6 +175,10 @@ std::vector&lt; SpacedSeed &gt;&#160;</td><td class="memItemRight" valign="botto
 <tr class="separator:a0c9cb0705283e0519330f79629cdc738"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abfd77a3465be4993f797a31a3b2a285b" id="r_abfd77a3465be4993f797a31a3b2a285b"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abfd77a3465be4993f797a31a3b2a285b">get_reverse_complement</a> (const std::string &amp;seq)</td></tr>
 <tr class="separator:abfd77a3465be4993f797a31a3b2a285b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e207bdad01de317a59f51f8a951207a" id="r_a7e207bdad01de317a59f51f8a951207a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e207bdad01de317a59f51f8a951207a">bs_conversion</a> (std::string &amp;seq, const std::string &amp;type)</td></tr>
+<tr class="separator:a7e207bdad01de317a59f51f8a951207a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad7a4d5c7f7cda8588f5b1d0c6114324" id="r_aad7a4d5c7f7cda8588f5b1d0c6114324"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aad7a4d5c7f7cda8588f5b1d0c6114324">get_bs_conversion</a> (const std::string &amp;seq, const std::string &amp;type)</td></tr>
+<tr class="separator:aad7a4d5c7f7cda8588f5b1d0c6114324"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a716b22a3ebaccac72777988b3725bd5b" id="r_a716b22a3ebaccac72777988b3725bd5b"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a716b22a3ebaccac72777988b3725bd5b">get_time</a> ()</td></tr>
 <tr class="separator:a716b22a3ebaccac72777988b3725bd5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0d6ecae33b5e60b5c285f5358a9ad6a" id="r_aa0d6ecae33b5e60b5c285f5358a9ad6a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa0d6ecae33b5e60b5c285f5358a9ad6a">log_info</a> (const std::string &amp;msg)</td></tr>
@@ -233,6 +243,12 @@ const char&#160;</td><td class="memItemRight" valign="bottom"><b>AMINO_ACIDS</b>
 <tr class="memitem:a60388808764875d40673ed9796102262" id="r_a60388808764875d40673ed9796102262"><td class="memItemLeft" align="right" valign="top"><a id="a60388808764875d40673ed9796102262" name="a60388808764875d40673ed9796102262"></a>
 const char&#160;</td><td class="memItemRight" valign="bottom"><b>CAPITALS</b> [256]</td></tr>
 <tr class="separator:a60388808764875d40673ed9796102262"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec859a8ab2c45d4b212f851132fcddc6" id="r_aec859a8ab2c45d4b212f851132fcddc6"><td class="memItemLeft" align="right" valign="top"><a id="aec859a8ab2c45d4b212f851132fcddc6" name="aec859a8ab2c45d4b212f851132fcddc6"></a>
+const char&#160;</td><td class="memItemRight" valign="bottom"><b>CT_CONVERSION</b> [256]</td></tr>
+<tr class="separator:aec859a8ab2c45d4b212f851132fcddc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada7f54f4d884d3159144191bab789250" id="r_ada7f54f4d884d3159144191bab789250"><td class="memItemLeft" align="right" valign="top"><a id="ada7f54f4d884d3159144191bab789250" name="ada7f54f4d884d3159144191bab789250"></a>
+const char&#160;</td><td class="memItemRight" valign="bottom"><b>GA_CONVERSION</b> [256]</td></tr>
+<tr class="separator:ada7f54f4d884d3159144191bab789250"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a088b277bd708b08d133deefb555414d1" id="r_a088b277bd708b08d133deefb555414d1"><td class="memItemLeft" align="right" valign="top"><a id="a088b277bd708b08d133deefb555414d1" name="a088b277bd708b08d133deefb555414d1"></a>
 constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><b>PRINT_COLOR_INFO</b> = &quot;\33[32m&quot;</td></tr>
 <tr class="separator:a088b277bd708b08d133deefb555414d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -251,6 +267,36 @@ constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><b>PRI
 <p>Functions for logging and error checking.</p>
 <p>Random utility functions. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="a7e207bdad01de317a59f51f8a951207a" name="a7e207bdad01de317a59f51f8a951207a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e207bdad01de317a59f51f8a951207a">&#9670;&#160;</a></span>bs_conversion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void btllib::bs_conversion </td>
+          <td>(</td>
+          <td class="paramtype">std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>seq</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>type</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Perform bisulfite conversion on a sequence in-place.</p>
+<p>Depending on the specified conversion type ("CT" or "GA"), each character in the sequence is replaced with its bisulfite-converted form using the corresponding conversion table. The argument sequence is modified directly.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">seq</td><td>Sequence to convert. </td></tr>
+    <tr><td class="paramname">type</td><td>Conversion type ("CT" or "GA"). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a5136f7df8791303fb0d812a82c87789a" name="a5136f7df8791303fb0d812a82c87789a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5136f7df8791303fb0d812a82c87789a">&#9670;&#160;</a></span>calc_phred_avg()</h2>
 
@@ -478,6 +524,36 @@ constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><b>PRI
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The basename of the path. </dd></dl>
+
+</div>
+</div>
+<a id="aad7a4d5c7f7cda8588f5b1d0c6114324" name="aad7a4d5c7f7cda8588f5b1d0c6114324"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad7a4d5c7f7cda8588f5b1d0c6114324">&#9670;&#160;</a></span>get_bs_conversion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string btllib::get_bs_conversion </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>seq</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>type</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Obtain a bisulfite-converted copy of the provided sequence. The argument sequence is left untouched.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">seq</td><td>Sequence to convert. </td></tr>
+    <tr><td class="paramname">type</td><td>Conversion type ("CT" or "GA").</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Bisulfite-converted sequence. </dd></dl>
 
 </div>
 </div>
