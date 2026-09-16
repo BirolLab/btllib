@@ -31,3 +31,13 @@ rm -f CMakeLists.txt.tmp
 # Currently, github does not include submodules in releases, hence this decision
 sed -i'.tmp' -e 's~\(.*EXECUTE_PROCESS(COMMAND\) git .*~\1 ;~' external/CMakeLists.txt
 rm -f external/CMakeLists.txt.tmp
+
+# louds_tree.hpp's swap() references non-existent m_select1/m_select0 members
+# (should be m_bv_select1/m_bv_select0) — a long-standing dead-code bug that's
+# harmless on older compilers but hard-errors under GCC 15's -Wtemplate-body,
+# since it checks template bodies even when never instantiated.
+sed -i'.tmp' \
+  -e 's/tree\.m_select1/tree.m_bv_select1/' \
+  -e 's/tree\.m_select0/tree.m_bv_select0/' \
+  include/sdsl/louds_tree.hpp
+rm -f include/sdsl/louds_tree.hpp.tmp
