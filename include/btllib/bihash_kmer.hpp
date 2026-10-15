@@ -246,7 +246,7 @@ public:
   }
 
   /**
-   * Extract the central dimer (two-base subitring) of the current k-mer window.
+   * Extract the central dimer (two-base substring) of the current k-mer window.
    * Since the number of dimers in a k-mer is always odd, the center dimer is
    * unambiguously defined as the (num_dimers / 2)-th dimer from the start.
    *
