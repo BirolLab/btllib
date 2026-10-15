@@ -82,7 +82,7 @@ public:
   {
     check_error(k == 0, "BiHash: k must be greater than 0");
     check_error(k % 2 == 1, "BiHash: k must be even");
-    check_error((k / 2) % 2 == 0, "BiHash: k must have odd number of dimers");
+    check_error((k / 2) % 2 == 0, "BiHash: k must have odd number of dimers (cannot be a multiple of 4)");
     check_error(this->seq_len < k,
                 "BiHash: sequence length (" + std::to_string(this->seq_len) +
                   ") is smaller than k (" + std::to_string(k) + ")");
