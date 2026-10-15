@@ -87,7 +87,7 @@ public:
                 "BiHash: sequence length (" + std::to_string(this->seq_len) +
                   ") is smaller than k (" + std::to_string(k) + ")");
     check_error(pos > this->seq_len - k,
-                "BiHash: passed position (" + std::to_string(pos) +
+                "BiHash: specified start position (" + std::to_string(pos) +
                   ") is larger than sequence length (" +
                   std::to_string(this->seq_len) + ")");
 
