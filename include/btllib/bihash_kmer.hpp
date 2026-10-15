@@ -195,7 +195,6 @@ public:
         return false;
       if (!dimer_valid(pos + k - 1)) {
         pos += k + 1;
-        // pos += k;
         return init();
       }
       even = false;
