@@ -294,7 +294,7 @@ public:
   }
 
   /**
-   * Peeks the hash values as if roll() was called for char_in (without
+   * Peeks the hash values as if roll() was called for char_in without
    * advancing the BiHash object. The peeked hash values can be obtained through
    * the hashes() method.
    * @return \p true on success and \p false otherwise
