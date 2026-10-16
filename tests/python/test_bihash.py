@@ -4,7 +4,7 @@ import btllib
 
 class TestBiHash(unittest.TestCase):
 
-    def test_real_test_case(self):
+    def test_real_sequencing_read(self):
         first34 = (
             "ATCACGCNTAAACTTTTTTTTTTTTTTTTTTTTTTTTTTTNTTCCCCACCAGATCGGAAGAGCAC"
             "ACGTCTTAAAANCAGTCAATGGAGTTTATCGCGTTTGCCGTCGTCGGCTTGNAAAGGNGGGGGGG"
