@@ -30,6 +30,12 @@
 #include "btllib/nthash_seed.hpp"
 #include "btllib/hashing_internals.hpp"
 #include "btllib/nthash_kmer.hpp"
+#include "btllib/bihash_kmer_base.hpp"
+#include "btllib/bihash_kmer_bi.hpp"
+#include "btllib/bihash_hashing_internals.hpp"
+#include "btllib/bihash_kmer_directional.hpp"
+#include "btllib/bihash.hpp"
+#include "btllib/bihash_kmer.hpp"
 %}
 
 %include <stdint.i>
@@ -75,5 +81,11 @@
 %include "btllib/nthash_seed.hpp"
 %include "btllib/hashing_internals.hpp"
 %include "btllib/nthash_kmer.hpp"
+%include "btllib/bihash_kmer_base.hpp"
+%include "btllib/bihash_kmer_bi.hpp"
+%include "btllib/bihash_hashing_internals.hpp"
+%include "btllib/bihash_kmer_directional.hpp"
+%include "btllib/bihash.hpp"
+%include "btllib/bihash_kmer.hpp"
 
 %include "../extra_templates.i"

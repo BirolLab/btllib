@@ -1,0 +1,429 @@
+#pragma once
+
+#include <algorithm>
+#include <array>
+#include <cstdint>
+#include <cstring>
+#include <deque>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include <btllib/bihash_hashing_internals.hpp>
+#include <btllib/bihash_kmer_base.hpp>
+#include <btllib/status.hpp>
+
+namespace btllib {
+
+using hashing_internals::extend_hashes;
+using hashing_internals::srol;
+using hashing_internals::sror;
+
+using hashing_internals::base_forward_bi_hash;
+using hashing_internals::next_forward_bi_hash;
+using hashing_internals::prev_forward_bi_hash;
+
+using hashing_internals::base_reverse_bi_hash;
+using hashing_internals::next_reverse_bi_hash;
+using hashing_internals::prev_reverse_bi_hash;
+
+using hashing_internals::BI_CONVERT_TAB;
+using hashing_internals::BI_RC_CONVERT_TAB;
+
+using hashing_internals::CA_DIMER_TAB;
+using hashing_internals::CC_DIMER_TAB;
+using hashing_internals::CG_DIMER_TAB;
+using hashing_internals::CT_DIMER_TAB;
+
+using hashing_internals::MS_TAB_31L_CA;
+using hashing_internals::MS_TAB_31L_CC;
+using hashing_internals::MS_TAB_31L_CG;
+using hashing_internals::MS_TAB_31L_CT;
+using hashing_internals::MS_TAB_33R_CA;
+using hashing_internals::MS_TAB_33R_CC;
+using hashing_internals::MS_TAB_33R_CG;
+using hashing_internals::MS_TAB_33R_CT;
+
+class BiHash : public BiHashBase
+{
+
+public:
+  /**
+   * Construct an BiHash object for k-mers.
+   * @param seq C-string containing sequence data
+   * @param seq_len Length of the sequence
+   * @param num_hashes Number of hashes to generate per k-mer
+   * @param k K-mer size
+   * @param mode  Hashing scheme targeting a specific methylation context.
+   *              Supported values are "CG", "CC", "CT", and "CA". Each mode
+   *              applies the corresponding bisulfite-oriented hashing behavior.
+   *
+   *              Note: BiHash can only handle one methylation context at a
+   * time. For multi-context bisulfite processing, use BiHashDirectional, which
+   * performs the additional required handling.
+   * @param pos Position in the sequence to start hashing from
+   */
+  BiHash(const char* seq,
+         size_t seq_len,
+         hashing_internals::NUM_HASHES_TYPE num_hashes,
+         hashing_internals::K_TYPE k,
+         std::string mode,
+         size_t pos = 0)
+    : BiHashBase(seq, seq_len, num_hashes, k, pos)
+  {
+    static const std::vector<std::string> valid_modes = {
+      "CG", "CC", "CT", "CA"
+    };
+    check_error(std::find(valid_modes.begin(), valid_modes.end(), mode) ==
+                  valid_modes.end(),
+                "BiHash: mode must be one of [CG, CC, CT, CA], but got '" +
+                  mode + "'");
+
+    if (mode == "CC") {
+      DIMER_TAB = CC_DIMER_TAB;
+      TAB_33R = MS_TAB_33R_CC;
+      TAB_31L = MS_TAB_31L_CC;
+      meth_signal = { "CC", "GG" };
+    } else if (mode == "CG") {
+      DIMER_TAB = CG_DIMER_TAB;
+      TAB_33R = MS_TAB_33R_CG;
+      TAB_31L = MS_TAB_31L_CG;
+      meth_signal = { "CG" };
+    } else if (mode == "CT") {
+      DIMER_TAB = CT_DIMER_TAB;
+      TAB_33R = MS_TAB_33R_CT;
+      TAB_31L = MS_TAB_31L_CT;
+      meth_signal = { "CT", "AG" };
+    } else if (mode == "CA") {
+      DIMER_TAB = CA_DIMER_TAB;
+      TAB_33R = MS_TAB_33R_CA;
+      TAB_31L = MS_TAB_31L_CA;
+      meth_signal = { "CA", "TG" };
+    }
+  }
+
+  /**
+   * Construct an BiHash object for k-mers.
+   * @param seq Sequence string
+   * @param num_hashes Number of hashes to produce per k-mer
+   * @param k K-mer size
+   * @param mode  Hashing scheme targeting a specific methylation context.
+   *              Supported values are "CG", "CC", "CT", and "CA". Each mode
+   *              applies the corresponding bisulfite-oriented hashing behavior.
+   *
+   *              Note: BiHash can only handle one methylation context at a
+   * time. For multi-context bisulfite processing, use BiHashDirectional, which
+   * performs the additional required handling.
+   * @param pos Position in sequence to start hashing from
+   */
+  BiHash(const std::string& seq,
+         hashing_internals::NUM_HASHES_TYPE num_hashes,
+         hashing_internals::K_TYPE k,
+         std::string mode = "CG",
+         size_t pos = 0)
+    : BiHash(seq.data(), seq.size(), num_hashes, k, mode, pos)
+  {
+  }
+
+  BiHash(const BiHash& obj)
+    : BiHashBase(obj)
+    , fwd_hashes(obj.fwd_hashes)
+    , rev_hashes(obj.rev_hashes)
+    , meth_signal(obj.meth_signal)
+    , even(obj.even)
+    , DIMER_TAB(obj.DIMER_TAB)
+    , TAB_33R(obj.TAB_33R)
+    , TAB_31L(obj.TAB_31L)
+  {
+  }
+
+  BiHash(BiHash&&) = default;
+
+  /**
+   * Calculate the hash values of current k-mer and advance to the next k-mer.
+   * BiHash advances one nucleotide at a time until it finds a k-mer with valid
+   * characters (ACGTU) and skips over those with invalid characters (non-ACGTU,
+   * including N). This method must be called before hashes() is accessed, for
+   * the first and every subsequent hashed kmer. get_pos() may be called at any
+   * time to obtain the position of last hashed k-mer or the k-mer to be hashed
+   * if roll() has never been called on this BiHash object. It is important to
+   * note that the number of roll() calls is NOT necessarily equal to get_pos(),
+   * if there are N's or invalid characters in the hashed sequence.
+   * @return \p true on success and \p false otherwise
+   */
+  bool roll()
+  {
+    if (!initialized) {
+      return init();
+    }
+
+    auto dimer_valid = [&](size_t p) -> bool {
+      if (p + 1 > seq_len - 1)
+        return false;
+      char c1 = seq[p];
+      char c2 = seq[p + 1];
+      uint8_t a = BI_CONVERT_TAB[(unsigned char)c1];
+      uint8_t b = BI_CONVERT_TAB[(unsigned char)c2];
+      uint8_t loc = 10 * a + b;
+      return DIMER_TAB[loc] != 0;
+    };
+
+    if (even) {
+      if (pos >= seq_len - k)
+        return false;
+      if (!dimer_valid(pos + k - 1)) {
+        pos += k + 1;
+        return init();
+      }
+      even = false;
+      ++pos;
+
+      extend_hashes(
+        fwd_hashes[1], rev_hashes[1], k, num_hashes, hash_arr.get());
+      return true;
+    }
+
+    if (pos >= seq_len - k)
+      return false;
+
+    if (!dimer_valid(pos + k - 1)) {
+      pos += k + 1;
+      return init();
+    }
+
+    bool can_roll_second = dimer_valid(pos + k);
+
+    for (int i = 0; i < 2; i++) {
+      if (i == 0 || can_roll_second) {
+
+        char out1 = seq[pos + i - 1];
+        char out2 = seq[pos + i + 1 - 1];
+
+        char in1 = seq[pos + k + i - 1];
+        char in2 = seq[pos + k + i + 1 - 1];
+
+        fwd_hashes[i] = next_forward_bi_hash(
+          fwd_hashes[i], k, out1, out2, in1, in2, DIMER_TAB, TAB_33R, TAB_31L);
+
+        rev_hashes[i] = next_reverse_bi_hash(
+          rev_hashes[i], k, out1, out2, in1, in2, DIMER_TAB, TAB_33R, TAB_31L);
+      }
+    }
+
+    extend_hashes(fwd_hashes[0], rev_hashes[0], k, num_hashes, hash_arr.get());
+
+    ++pos;
+    even = true;
+
+    if (!can_roll_second) {
+      fwd_hashes[1] = 0;
+      rev_hashes[1] = 0;
+    }
+
+    return true;
+  }
+
+  /**
+   * Check if the k-mer center position is methylated based on conversion type.
+   * For CT conversion, methylation corresponds to a cytosine ('C'/'c').
+   * For GA conversion, methylation corresponds to a guanine ('G'/'g').
+   *
+   * @return true if the base at the methylation index indicates methylation,
+   * false otherwise.
+   */
+  bool is_methylated()
+  {
+    std::string dimer(center_dimer());
+    std::transform(dimer.begin(), dimer.end(), dimer.begin(), ::toupper);
+    return std::find(meth_signal.begin(), meth_signal.end(), dimer) !=
+           meth_signal.end();
+  }
+
+  /**
+   * Check if the forward hash is higher than the reverse hash.
+   * @return true if forward hash > reverse hash, false otherwise
+   */
+  bool is_forward_higher()
+  {
+    size_t idx = even ? 0 : 1;
+    return fwd_hashes[idx] > rev_hashes[idx];
+  }
+
+  /**
+   * Like the roll() function, but advance backwards.
+   * @return \p true on success and \p false otherwise
+   */
+  bool roll_back()
+  {
+    if (!initialized) {
+      return init();
+    }
+
+    if (pos == 0) {
+      return false;
+    }
+
+    auto dimer_valid = [&](size_t p) -> bool {
+      if (p + 1 >= seq_len)
+        return false;
+      uint8_t a = BI_CONVERT_TAB[(unsigned char)seq[p]];
+      uint8_t b = BI_CONVERT_TAB[(unsigned char)seq[p + 1]];
+      uint8_t loc = 10 * a + b;
+      return DIMER_TAB[loc] != 0;
+    };
+
+    // Odd State
+    if (!even) {
+      extend_hashes(
+        fwd_hashes[0], rev_hashes[0], k, num_hashes, hash_arr.get());
+      --pos;
+      even = true;
+      return true;
+    }
+
+    // Even state
+    // First dimer (the one at pos-1, pos)
+    if (!dimer_valid(pos - 1)) {
+      if (pos <= k)
+        return false;
+      pos -= k;
+      return init();
+    }
+
+    // Check if the second rollback is possible
+    bool can_roll_second = true;
+    if (pos <= 1 || !dimer_valid(pos - 2)) {
+      can_roll_second = false;
+    }
+
+    // If the second hash is missing, restore it by reinitializing around pos-2
+    if (fwd_hashes[1] == 0) {
+      pos -= 2;
+      init();
+      pos++;
+      extend_hashes(
+        fwd_hashes[1], rev_hashes[1], k, num_hashes, hash_arr.get());
+      even = false;
+      return true;
+    }
+
+    // Perform 1 or 2 backward hash updates
+    for (int i = 0; i < 2; i++) {
+      if (i == 1 || can_roll_second) {
+
+        char out1 = seq[pos + k - 2 + i];
+        char out2 = seq[pos + k - 1 + i];
+        char in1 = seq[pos - 2 + i];
+        char in2 = seq[pos - 1 + i];
+
+        fwd_hashes[i] = prev_forward_bi_hash(
+          fwd_hashes[i], k, out1, out2, in1, in2, DIMER_TAB, TAB_33R, TAB_31L);
+
+        rev_hashes[i] = prev_reverse_bi_hash(
+          rev_hashes[i], k, out1, out2, in1, in2, DIMER_TAB, TAB_33R, TAB_31L);
+      }
+    }
+
+    extend_hashes(fwd_hashes[1], rev_hashes[1], k, num_hashes, hash_arr.get());
+
+    --pos;
+    even = false;
+    return true;
+  }
+
+  /**
+   * Get the hash value of the forward strand.
+   * @return Forward hash value
+   */
+  uint64_t get_forward_hash() const
+  {
+    if (even) {
+      return fwd_hashes[0];
+    } else {
+      return fwd_hashes[1];
+    }
+  }
+
+  /**
+   * Get the hash value of the reverse strand.
+   * @return Reverse-complement hash value
+   */
+  uint64_t get_reverse_hash() const
+  {
+    if (even) {
+      return rev_hashes[0];
+    } else {
+      return rev_hashes[1];
+    }
+  }
+
+private:
+  std::vector<uint64_t> fwd_hashes = { 0, 0 };
+  std::vector<uint64_t> rev_hashes = { 0, 0 };
+  std::vector<std::string> meth_signal;
+  bool even = true;
+  const uint64_t* DIMER_TAB = nullptr;
+  const uint64_t* const* TAB_33R = nullptr;
+  const uint64_t* const* TAB_31L = nullptr;
+
+  /**
+   * Initialize the internal state of the iterator
+   * @return \p true if successful, \p false otherwise
+   */
+
+  bool init()
+  {
+    // std::cerr << "running init" << std::endl;
+    even = true;
+    bool has_n = true;
+    while (pos <= seq_len - k + 1 && has_n) {
+      has_n = false;
+      for (unsigned i = 0; i < k && pos <= seq_len - k + 1; i += 2) {
+        const char c1 = seq[pos + k - i - 2];
+        const char c2 = seq[pos + k - i - 1];
+        const uint8_t a = BI_CONVERT_TAB[(unsigned char)c1];
+        const uint8_t b = BI_CONVERT_TAB[(unsigned char)c2];
+        const uint8_t loc = 10 * a + b;
+
+        if (DIMER_TAB[loc] == 0) {
+          if (b == 0) {
+            pos += k - i;
+          } else {
+            pos += k - i - 1;
+          }
+
+          has_n = true;
+        }
+      }
+    }
+
+    if (pos > seq_len - k) {
+      return false;
+    }
+
+    auto dimer_valid = [&](size_t p) -> bool {
+      if (p + 1 > seq_len - 1)
+        return false;
+      char c1 = seq[p];
+      char c2 = seq[p + 1];
+      uint8_t a = BI_CONVERT_TAB[(unsigned char)c1];
+      uint8_t b = BI_CONVERT_TAB[(unsigned char)c2];
+      uint8_t loc = 10 * a + b;
+      return DIMER_TAB[loc] != 0;
+    };
+    bool has_second = true;
+    if (pos == seq_len - k || !dimer_valid(pos + k - 1)) {
+      has_second = false;
+    }
+
+    fwd_hashes = base_forward_bi_hash(seq + pos, has_second, k, DIMER_TAB);
+    rev_hashes = base_reverse_bi_hash(seq + pos, has_second, k, DIMER_TAB);
+
+    extend_hashes(fwd_hashes[0], rev_hashes[0], k, num_hashes, hash_arr.get());
+
+    initialized = true;
+    return true;
+  }
+};
+}
