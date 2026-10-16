@@ -3,8 +3,6 @@
 #include <cstddef>
 #include <iostream>
 #include <limits>
-#include <string>
-#include <unordered_set>
 
 #include <btllib/hashing_internals.hpp>
 
@@ -712,10 +710,6 @@ static const uint64_t CT_SEED_CT = 0x2c555d4ed6a221a1ULL; // 3
 static const uint64_t GA_SEED_GA = 0x4d9c9d29392bb7d6ULL; // 0
 static const uint64_t GA_SEED_C_ = 0x0e06d727c6e35043ULL; // 1
 static const uint64_t GA_SEED_T_ = 0x013a8fe8dea57b07ULL; // 3
-inline const std::unordered_set<std::string> VALID_MODES = { "CG",
-                                                             "CC",
-                                                             "CT",
-                                                             "CA" };
 
 const uint64_t BI_CT_SEED_TAB[ASCII_SIZE] = {
   XX_SEED_N_, GA_SEED_T_, XX_SEED_N_, GA_SEED_GA,

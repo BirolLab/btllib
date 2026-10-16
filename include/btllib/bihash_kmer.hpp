@@ -8,7 +8,6 @@
 #include <iostream>
 #include <memory>
 #include <string>
-#include <unordered_set>
 #include <vector>
 
 #include <btllib/bihash_hashing_internals.hpp>
@@ -73,10 +72,11 @@ public:
          size_t pos = 0)
     : BiHashBase(seq, seq_len, num_hashes, k, pos)
   {
-    static const std::unordered_set<std::string> valid_modes = {
+    static const std::vector<std::string> valid_modes = {
       "CG", "CC", "CT", "CA"
     };
-    check_error(valid_modes.find(mode) == valid_modes.end(),
+    check_error(std::find(valid_modes.begin(), valid_modes.end(), mode) ==
+                  valid_modes.end(),
                 "BiHash: mode must be one of [CG, CC, CT, CA], but got '" +
                   mode + "'");
 
