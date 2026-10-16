@@ -105,6 +105,24 @@ using SpacedSeed = std::vector<unsigned>;
 %ignore btllib::AAHash::AAHash(AAHash&&);
 %ignore btllib::AAHash::AAHash(const AAHash&);
 
+%ignore btllib::BiHash::BiHash(const char*, size_t, hashing_internals::NUM_HASHES_TYPE, hashing_internals::K_TYPE, std::string, size_t pos = 0);
+%ignore btllib::BiHash::BiHash(const std::string&, hashing_internals::NUM_HASHES_TYPE, hashing_internals::K_TYPE, std::string mode = "CG", size_t pos = 0);
+%ignore btllib::BiHash::BiHash(BiHash&&);
+%ignore btllib::BiHash::BiHash(const BiHash&);
+
+%ignore btllib::BiHashBi::BiHashBi(const char*, size_t, hashing_internals::NUM_HASHES_TYPE, hashing_internals::K_TYPE, size_t pos = 0);
+%ignore btllib::BiHashBi::BiHashBi(const std::string&, hashing_internals::NUM_HASHES_TYPE, hashing_internals::K_TYPE, size_t pos = 0);
+%ignore btllib::BiHashBi::BiHashBi(BiHashBi&&);
+%ignore btllib::BiHashBi::BiHashBi(const BiHashBi&);
+
+%ignore btllib::BiHashDirectional::BiHashDirectional(const char*, size_t, hashing_internals::NUM_HASHES_TYPE, hashing_internals::K_TYPE, std::string, size_t pos = 0);
+%ignore btllib::BiHashDirectional::BiHashDirectional(const std::string&, hashing_internals::NUM_HASHES_TYPE, hashing_internals::K_TYPE, std::string, size_t pos = 0);
+%ignore btllib::BiHashDirectional::BiHashDirectional(BiHashDirectional&&);
+%ignore btllib::BiHashDirectional::BiHashDirectional(const BiHashDirectional&);
+
+%ignore btllib::BiHashBase::BiHashBase;
+%ignore btllib::BiHashSingleBase::BiHashSingleBase;
+
 %extend btllib::NtHash {
   NtHash(std::string seq, unsigned hash_num, unsigned k, size_t pos = 0)
   {
@@ -167,6 +185,57 @@ using SpacedSeed = std::vector<unsigned>;
   }
 
   ~AAHash() {
+    std::unique_lock<std::mutex> lock(nthash_mutex);
+    nthash_strings.erase(nthash_ids[(void*)self]);
+    nthash_ids.erase((void*)self);
+  }
+}
+
+%extend btllib::BiHash {
+  BiHash(std::string seq, unsigned hash_num, unsigned k, std::string mode = "CG", size_t pos = 0)
+  {
+    std::unique_lock<std::mutex> lock(nthash_mutex);
+    nthash_strings[++nthash_last_id] = std::move(seq);
+    auto *bihash = new btllib::BiHash(nthash_strings[nthash_last_id], hash_num, k, mode, pos);
+    nthash_ids[(void*)bihash] = nthash_last_id;
+    return bihash;
+  }
+
+  ~BiHash() {
+    std::unique_lock<std::mutex> lock(nthash_mutex);
+    nthash_strings.erase(nthash_ids[(void*)self]);
+    nthash_ids.erase((void*)self);
+  }
+}
+
+%extend btllib::BiHashBi {
+  BiHashBi(std::string seq, unsigned hash_num, unsigned k, size_t pos = 0)
+  {
+    std::unique_lock<std::mutex> lock(nthash_mutex);
+    nthash_strings[++nthash_last_id] = std::move(seq);
+    auto *bihash = new btllib::BiHashBi(nthash_strings[nthash_last_id], hash_num, k, pos);
+    nthash_ids[(void*)bihash] = nthash_last_id;
+    return bihash;
+  }
+
+  ~BiHashBi() {
+    std::unique_lock<std::mutex> lock(nthash_mutex);
+    nthash_strings.erase(nthash_ids[(void*)self]);
+    nthash_ids.erase((void*)self);
+  }
+}
+
+%extend btllib::BiHashDirectional {
+  BiHashDirectional(std::string seq, unsigned hash_num, unsigned k, std::string conversion_type, size_t pos = 0)
+  {
+    std::unique_lock<std::mutex> lock(nthash_mutex);
+    nthash_strings[++nthash_last_id] = std::move(seq);
+    auto *bihash = new btllib::BiHashDirectional(nthash_strings[nthash_last_id], hash_num, k, conversion_type, pos);
+    nthash_ids[(void*)bihash] = nthash_last_id;
+    return bihash;
+  }
+
+  ~BiHashDirectional() {
     std::unique_lock<std::mutex> lock(nthash_mutex);
     nthash_strings.erase(nthash_ids[(void*)self]);
     nthash_ids.erase((void*)self);

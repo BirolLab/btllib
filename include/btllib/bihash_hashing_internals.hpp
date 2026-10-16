@@ -3,6 +3,8 @@
 #include <cstddef>
 #include <iostream>
 #include <limits>
+#include <string>
+#include <unordered_set>
 
 #include <btllib/hashing_internals.hpp>
 

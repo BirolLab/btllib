@@ -100,6 +100,21 @@
   }
 %}
 
+%typemap(out) uint64_t* btllib::BiHash::hashes,
+              uint64_t* btllib::BiHashBi::hashes,
+              uint64_t* btllib::BiHashDirectional::hashes,
+              uint64_t* btllib::BiHashBase::hashes,
+              uint64_t* btllib::BiHashSingleBase::hashes %{
+  $result = PyTuple_New(arg1->get_hash_num());
+  for (unsigned i = 0; i < arg1->get_hash_num(); ++i) {
+    PyTuple_SetItem($result, i, PyLong_FromUnsignedLong($1[i]));
+  }
+%}
+
+%typemap(out) std::string_view {
+  $result = PyUnicode_FromStringAndSize($1.data() ? $1.data() : "", $1.size());
+}
+
 %typemap(out) std::vector<btllib::Indexlr::Minimizer>* %{
   $result = PyList_New($1->size());
   for (unsigned i = 0; i < $1->size(); ++i) {
