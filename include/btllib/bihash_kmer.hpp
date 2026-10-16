@@ -12,6 +12,7 @@
 #include <vector>
 
 #include <btllib/bihash_hashing_internals.hpp>
+#include <btllib/bihash_kmer_base.hpp>
 #include <btllib/status.hpp>
 
 namespace btllib {
@@ -45,7 +46,7 @@ using hashing_internals::MS_TAB_33R_CC;
 using hashing_internals::MS_TAB_33R_CG;
 using hashing_internals::MS_TAB_33R_CT;
 
-class BiHash
+class BiHash : public BiHashBase
 {
 
 public:
@@ -70,24 +71,8 @@ public:
          hashing_internals::K_TYPE k,
          std::string mode,
          size_t pos = 0)
-    : seq(seq)
-    , seq_len(seq_len)
-    , num_hashes(num_hashes)
-    , k(k)
-    , pos(pos)
-    , initialized(false)
-    , hash_arr(new uint64_t[num_hashes])
+    : BiHashBase(seq, seq_len, num_hashes, k, pos)
   {
-    check_error(k == 0, "BiHash: k must be greater than 0");
-    check_error(k % 2 == 1, "BiHash: k must be even");
-    check_error((k / 2) % 2 == 0, "BiHash: k must have odd number of dimers (cannot be divisible by 4)");
-    check_error(this->seq_len < k,
-                "BiHash: sequence length (" + std::to_string(this->seq_len) +
-                  ") is smaller than k (" + std::to_string(k) + ")");
-    check_error(pos > this->seq_len - k,
-                "BiHash: specified start position (" + std::to_string(pos) +
-                  ") is larger than sequence length (" +
-                  std::to_string(this->seq_len) + ")");
     static const std::unordered_set<std::string> valid_modes = {
       "CG", "CC", "CT", "CA"
     };
@@ -142,21 +127,15 @@ public:
   }
 
   BiHash(const BiHash& obj)
-    : seq(obj.seq)
-    , seq_len(obj.seq_len)
-    , num_hashes(obj.num_hashes)
-    , k(obj.k)
-    , pos(obj.pos)
-    , initialized(obj.initialized)
+    : BiHashBase(obj)
     , fwd_hashes(obj.fwd_hashes)
     , rev_hashes(obj.rev_hashes)
-    , hash_arr(new uint64_t[obj.num_hashes])
+    , meth_signal(obj.meth_signal)
+    , even(obj.even)
+    , DIMER_TAB(obj.DIMER_TAB)
+    , TAB_33R(obj.TAB_33R)
+    , TAB_31L(obj.TAB_31L)
   {
-    DIMER_TAB = obj.DIMER_TAB;
-    TAB_33R = obj.TAB_33R;
-    TAB_31L = obj.TAB_31L;
-    std::memcpy(
-      hash_arr.get(), obj.hash_arr.get(), num_hashes * sizeof(uint64_t));
   }
 
   BiHash(BiHash&&) = default;
@@ -243,23 +222,6 @@ public:
     }
 
     return true;
-  }
-
-  /**
-   * Extract the central dimer (two-base substring) of the current k-mer window.
-   * Since the number of dimers in a k-mer is always odd, the center dimer is
-   * unambiguously defined as the (num_dimers / 2)-th dimer from the start.
-   *
-   * If the computed index extends beyond the sequence boundary, an empty string
-   * is returned.
-   *
-   * @return The center dimer of the current k-mer.
-   */
-  std::string_view center_dimer() const
-  {
-    constexpr size_t DIMER_LEN = 2;
-    const size_t center_idx = pos + (k / 4) * DIMER_LEN;
-    return std::string_view(seq + center_idx, DIMER_LEN);
   }
 
   /**
@@ -378,31 +340,6 @@ public:
   }
 
   /**
-   * Get the array of current canonical hash values (length = \p get_hash_num())
-   * @return Pointer to the hash array
-   */
-  const uint64_t* hashes() const { return hash_arr.get(); }
-
-  /**
-   * Get the position of last hashed k-mer or the k-mer to be hashed if roll()
-   * has never been called on this BiHash object.
-   * @return Position of the most recently hashed k-mer's first base-pair
-   */
-  size_t get_pos() const { return pos; }
-
-  /**
-   * Get the number of hashes generated per k-mer.
-   * @return Number of hashes per k-mer
-   */
-  hashing_internals::NUM_HASHES_TYPE get_hash_num() const { return num_hashes; }
-
-  /**
-   * Get the length of the k-mers.
-   * @return \p k
-   */
-  hashing_internals::K_TYPE get_k() const { return k; }
-
-  /**
    * Get the hash value of the forward strand.
    * @return Forward hash value
    */
@@ -429,17 +366,10 @@ public:
   }
 
 private:
-  const char* seq;
-  const size_t seq_len;
-  hashing_internals::NUM_HASHES_TYPE num_hashes;
-  hashing_internals::K_TYPE k;
-  size_t pos;
-  bool initialized;
   std::vector<uint64_t> fwd_hashes = { 0, 0 };
   std::vector<uint64_t> rev_hashes = { 0, 0 };
   std::vector<std::string> meth_signal;
   bool even = true;
-  std::unique_ptr<uint64_t[]> hash_arr;
   const uint64_t* DIMER_TAB = nullptr;
   const uint64_t* const* TAB_33R = nullptr;
   const uint64_t* const* TAB_31L = nullptr;

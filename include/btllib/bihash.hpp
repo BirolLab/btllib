@@ -10,6 +10,7 @@
 #include <vector>
 
 #include <btllib/bihash_kmer.hpp>
+#include <btllib/bihash_kmer_base.hpp>
 #include <btllib/bihash_kmer_bi.hpp>
 #include <btllib/bihash_kmer_directional.hpp>
 #include <btllib/hashing_internals.hpp>
