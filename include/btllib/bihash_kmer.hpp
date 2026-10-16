@@ -234,14 +234,7 @@ public:
    */
   bool is_methylated()
   {
-
-    size_t num_dimers = k / 2;
-    size_t center_idx = pos + (num_dimers / 2) * 2;
-
-    std::string dimer;
-    dimer += seq[center_idx];
-    dimer += seq[center_idx + 1];
-
+    std::string dimer(center_dimer());
     std::transform(dimer.begin(), dimer.end(), dimer.begin(), ::toupper);
     return std::find(meth_signal.begin(), meth_signal.end(), dimer) !=
            meth_signal.end();
