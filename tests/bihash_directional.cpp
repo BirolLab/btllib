@@ -315,7 +315,7 @@ main()
   }
 
   {
-    PRINT_TEST_NAME("base subititution - CT Mode")
+    PRINT_TEST_NAME("base substitution - CT Mode")
 
     std::string seq = "ACGTACACTGGACTGAGTCTAA";
     std::string sub = "ACGCGCACTGGACTGAGTCTAA";
@@ -335,7 +335,7 @@ main()
   }
 
   {
-    PRINT_TEST_NAME("base subititution - GA Mode")
+    PRINT_TEST_NAME("base substitution - GA Mode")
 
     std::string seq = "ACGTACACTGGACTGAGTCTAA";
     std::string sub = "ACGCGCACTGGACTGAGTCTAA";

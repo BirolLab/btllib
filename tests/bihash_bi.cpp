@@ -180,7 +180,7 @@ main()
   }
 
   {
-    PRINT_TEST_NAME("base subititution")
+    PRINT_TEST_NAME("base substitution")
 
     std::string seq = "ACGTACACTGGACTGAGTCTAA";
     std::string sub = "ACGCGCACTGGACTGAGTCTAA";

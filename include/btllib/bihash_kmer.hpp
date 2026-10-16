@@ -145,7 +145,7 @@ public:
    * BiHash advances one nucleotide at a time until it finds a k-mer with valid
    * characters (ACGTU) and skips over those with invalid characters (non-ACGTU,
    * including N). This method must be called before hashes() is accessed, for
-   * the first and every subiequent hashed kmer. get_pos() may be called at any
+   * the first and every subsequent hashed kmer. get_pos() may be called at any
    * time to obtain the position of last hashed k-mer or the k-mer to be hashed
    * if roll() has never been called on this BiHash object. It is important to
    * note that the number of roll() calls is NOT necessarily equal to get_pos(),
