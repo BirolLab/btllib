@@ -737,6 +737,10 @@ start_watchdog()
   return watchdog_pipe;
 }
 
+// setpgid() retry policy for the spawner (see process_spawner_init()).
+static const int SETPGID_MAX_ATTEMPTS = 200;
+static const useconds_t SETPGID_RETRY_PAUSE_US = 500;
+
 static bool
 process_spawner_init()
 {
@@ -762,8 +766,26 @@ process_spawner_init()
       // (e.g. SIGINT). If the parent receives SIGINT, it can decide how
       // to handle it or whether to ignore it. The spawner will simply
       // exist in the background and die if the parent dies as well.
-      check_error(setpgid(0, 0) != 0,
-                  "Process pipeline: setpgid failed in spawner process.");
+      // The parent also calls setpgid() on this process to close the race.
+      // On macOS, setpgid() can fail with EPERM when the parent has already
+      // moved this process, or transiently when many processes change groups
+      // at once. Succeed once this process leads its own group; retry EPERM.
+      for (int attempt = 1;; ++attempt) {
+        if (setpgid(0, 0) == 0) {
+          break;
+        }
+        const int err = errno;
+        if (getpgrp() == getpid()) {
+          break;
+        }
+        if (err != EPERM || attempt >= SETPGID_MAX_ATTEMPTS) {
+          errno = err;
+          log_error("Process pipeline: setpgid failed in spawner process: " +
+                    get_strerror());
+          std::exit(EXIT_FAILURE); // NOLINT(concurrency-mt-unsafe)
+        }
+        usleep(SETPGID_RETRY_PAUSE_US);
+      }
 
       auto ret = close(process_spawner_user2spawner_fd[PIPE_WRITE_END]);
       check_error(ret != 0,
@@ -785,8 +807,25 @@ process_spawner_init()
       }
       std::exit(EXIT_SUCCESS); // NOLINT(concurrency-mt-unsafe)
     }
-    check_error(setpgid(pid, pid) < 0 && errno != EACCES,
-                "Process pipeline: setpgid failed in parent process.");
+    check_error(pid < 0, "Process pipeline: fork failed: " + get_strerror());
+    // See the comment in the child branch above. Succeed if the child has
+    // already exec'd (EACCES) or leads its own group; retry EPERM.
+    for (int attempt = 1;; ++attempt) {
+      if (setpgid(pid, pid) == 0) {
+        break;
+      }
+      const int err = errno;
+      if (err == EACCES || getpgid(pid) == pid) {
+        break;
+      }
+      if (err != EPERM || attempt >= SETPGID_MAX_ATTEMPTS) {
+        errno = err;
+        log_error("Process pipeline: setpgid failed in parent process: " +
+                  get_strerror());
+        std::exit(EXIT_FAILURE); // NOLINT(concurrency-mt-unsafe)
+      }
+      usleep(SETPGID_RETRY_PAUSE_US);
+    }
 
     auto ret = close(process_spawner_user2spawner_fd[PIPE_READ_END]);
     check_error(ret != 0,
